@@ -1,0 +1,52 @@
+{
+	"name": "michiaki",
+	"version": "0.0.1",
+	"description": "best bot",
+	"main": "./src/index.js",
+	"scripts": {
+		"start": "node .",
+		"dev": "nodemon",
+		"debug": "node ./src/index.test.js",
+		"shard": "node shard.js",
+		"eslint": "eslint --fix ./src",
+		"prettier": "prettier --write ./src/**/*.js --no-config"
+	},
+	"keywords": [
+		"Discord",
+		"bot",
+		"best",
+		"v13",
+		"op",
+		"dankmemer",
+		"miwa"
+	],
+	"author": "HypsterOP",
+	"license": "ISC",
+	"devDependencies": {
+		"dotenv": "^10.0.0",
+		"eslint": "^7.32.0",
+		"eslint-config-xo-space": "^0.28.0",
+		"eslint-plugin-header": "^3.1.1",
+		"eslint-plugin-sort-requires": "^2.1.0",
+		"nodemon": "^2.0.12",
+		"prettier": "^2.3.2"
+	},
+	"dependencies": {
+		"chalk": "^4.1.2",
+		"color-string": "^1.6.0",
+		"common-tags": "^1.8.0",
+		"discord.js": "^13.0.0-dev.t1628124537.3eb4140",
+		"lodash": "^4.17.21",
+		"moment": "^2.29.1",
+		"moment-duration-format": "^2.3.2",
+		"moment-timezone": "^0.5.33",
+		"mongoose": "^5.13.5",
+		"ms": "^2.1.2",
+		"node-fetch": "^2.6.1",
+		"pretty-error": "^3.0.4",
+		"pretty-ms": "^7.0.1",
+		"puppeteer-extra": "^3.1.18",
+		"puppeteer-extra-plugin-adblocker": "^2.11.11",
+		"puppeteer-extra-plugin-stealth": "^2.7.8"
+	}
+}

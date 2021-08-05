@@ -1,0 +1,75 @@
+{
+	"Discord Command": {
+		"prefix": "!discordcommand",
+		"body": [
+			"const Command = require(\"../../structures/command\");",
+			"const { Message } = require(\"discord.js\");",
+			"",
+			"module.exports = class ${1:name}Command extends Command {",
+			"  constructor(...args) {",
+			"    super(...args, {",
+			"      id: \"${1:name}\"",
+			"    });",
+			"  }",
+			"",
+			"  /**",
+			"   * @param {Message} message",
+			"   * @param {String[]} args",
+			"   */",
+			"  async do(message, args) {",
+			"    try {",
+			"      ${2:code}",
+			"    } catch (err) {",
+			"      return message.channel.send({ content: err });",
+			"    }",
+			"  }",
+			"};",
+			""
+		],
+		"description": "Discord Command"
+	},
+	"Discord Slash Command": {
+		"prefix": "discord.slash",
+		"body": [
+			"const SlashCommand = require(\"../../structures/slash-command\");",
+			"const { CommandInteraction } = require(\"discord.js\");",
+			"",
+			"module.exports = class ${1:name}Command extends SlashCommand {",
+			"  constructor(...args) {",
+			"    super(...args, {",
+			"      id: \"${1:name}\"",
+			"    });",
+			"  }",
+			"",
+			"  /**",
+			"   * @param {CommandInteraction} interaction ",
+			"   * @param {import('discord.js').CommandInteractionOption[]} args",
+			"   */",
+			"  async do(interaction, args) {",
+			"      ${2:code}",
+			"  }",
+			"};"
+		],
+		"description": "Discord Slash Command"
+	},
+	"Discord Event": {
+		"prefix": "discord.event",
+		"body": [
+			"const Event = require(\"../../structures/event\");",
+			"",
+			"module.exports = class ${1|rateLimit,ready,guildCreate,guildDelete,guildUpdate,guildUnavailable,guildAvailable,guildMemberAdd,guildMemberRemove,guildMemberUpdate,guildMemberAvailable,guildMemberSpeaking,guildMembersChunk,guildIntegrationsUpdate,roleCreate,roleDelete,inviteCreate,inviteDelete,roleUpdate,emojiCreate,emojiDelete,emojiUpdate,guildBanAdd,guildBanRemove,channelCreate,channelDelete,channelUpdate,channelPinsUpdate,message,messageDelete,messageUpdate,messageDeleteBulk,messageReactionAdd,messageReactionRemove,messageReactionRemoveAll,messageReactionRemoveEmoji,userUpdate,presenceUpdate,voiceServerUpdate,voiceStateUpdate,subscribe,unsubscribe,typingStart,typingStop,webhookUpdate,error,warn,debug,shardDisconnect,shardError,shardReconnecting,shardReady,shardResume,invalidated,raw|}Event extends Event {",
+			"  constructor(...args) {",
+			"    super(...args, {",
+			"      id: \"${1|rateLimit,ready,guildCreate,guildDelete,guildUpdate,guildUnavailable,guildAvailable,guildMemberAdd,guildMemberRemove,guildMemberUpdate,guildMemberAvailable,guildMemberSpeaking,guildMembersChunk,guildIntegrationsUpdate,roleCreate,roleDelete,inviteCreate,inviteDelete,roleUpdate,emojiCreate,emojiDelete,emojiUpdate,guildBanAdd,guildBanRemove,channelCreate,channelDelete,channelUpdate,channelPinsUpdate,message,messageDelete,messageUpdate,messageDeleteBulk,messageReactionAdd,messageReactionRemove,messageReactionRemoveAll,messageReactionRemoveEmoji,userUpdate,presenceUpdate,voiceServerUpdate,voiceStateUpdate,subscribe,unsubscribe,typingStart,typingStop,webhookUpdate,error,warn,debug,shardDisconnect,shardError,shardReconnecting,shardReady,shardResume,invalidated,raw|}\",",
+			"      once: false",
+			"    });",
+			"  }",
+			"  async do(${2:args}) {",
+			"      ${2:code}",
+			"  }",
+			"};",
+			""
+		],
+		"description": "Discord Event"
+	}
+}
