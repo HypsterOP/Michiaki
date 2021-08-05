@@ -33,6 +33,10 @@ module.exports = class client extends Client {
 		require('events').EventEmitter.defaultMaxListeners = 100;
 		process.setMaxListeners(100);
 
+		const memer = require('memer-api')
+
+		this.memer = new memer(process.env.MEME)
+
 		this.config = require('../config');
 
 		this.utils = require('../utils');
