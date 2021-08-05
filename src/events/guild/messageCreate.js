@@ -101,7 +101,7 @@ module.exports = class MessageEvent extends Event {
 			}
 
 			const ops = {
-				prefix: "m!",
+				prefix: 'm!',
 				invite: 'https://dsc.gg/Michiaki-server',
 				description: 'api for Michiaki.',
 				city: 'Hyderabad',
