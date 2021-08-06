@@ -32,7 +32,7 @@ module.exports.config = mongoose.model(
 	'config',
 	new mongoose.Schema({
 		guild: String,
-		prefix: { type: String, default: 'm!' },
+		prefix: { type: String, default: 'm.' },
 		language: { type: String, default: 'english' },
 		channel: [channels],
 		anti: [antis],

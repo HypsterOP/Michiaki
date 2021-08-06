@@ -25,6 +25,6 @@ module.exports = {
 			log: '',
 			report: '',
 		},
-		prefix: 'm!',
+		prefix: 'm.',
 	},
 };
