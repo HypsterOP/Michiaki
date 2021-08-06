@@ -1,8 +1,6 @@
 const Command = require("../../structures/command");
 const { Message, MessageAttachment } = require("discord.js");
 
-const { ICONS, AchievementCreator } = require('mc-achievements')
-
 module.exports = class AchieveCommand extends Command {
   constructor(...args) {
     super(...args, {
