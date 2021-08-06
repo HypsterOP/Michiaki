@@ -35,7 +35,11 @@ module.exports = class client extends Client {
 
 		const memer = require('memer-api')
 
-		this.memer = new memer(process.env.MEME)
+		const alexclient = require('alexflipnote.js')
+
+		this.memer = new memer(process.env.MEME);
+
+		this.alexflipnote = new alexclient(process.env.ALEXFLIPNOTE);
 
 		this.config = require('../config');
 

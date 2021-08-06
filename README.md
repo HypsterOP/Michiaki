@@ -8,6 +8,10 @@
 
 # go to `#bot-commands` and type meme gentoken
 
+## AlexFlipNote Api key from discord server: https://discord.gg/vdNnKyvMgv
+
+# go to `#support` and read the pins for an api key.
+
 ## fill the code in .env
 
 ## rename .env.example to .env
