@@ -21,9 +21,14 @@ module.exports = class BotInfoCommand extends Command {
 	 */
 	async do(message, args) {
 		try {
-			const { config } = this.mongoose.models;
+			const { models } = require('mongoose');
+			const Values = Object.values(models);
+
+			const totalEntries = await Values.reduce(async (accumulator, model) => {
+				const counts = await model.countDocuments();
+				return (await accumulator) + counts;
+			}, Promise.resolve(0));
 			let userclient = this.client.user.username;
-			let database = config.countDocuments({});
 			const uptime = moment
 				.duration(this.client.uptime)
 				.format(`D [days] H [hrs] m [mins] s [seconds]`);
@@ -51,6 +56,7 @@ Users: ${users}
 Latest Reboot: ${uptime} ago
 RAM: ${totalMemMb}MB
 Commands Loaded: ${commands}
+Database Entries: ${totalEntries}
 \`\`\`
       `,
 				});
