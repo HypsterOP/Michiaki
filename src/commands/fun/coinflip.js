@@ -15,7 +15,7 @@ module.exports = class CoinflipCommand extends Command {
    */
   async do(message, args) {
     try {
-      const heads = Math.random() > 0.10;
+      const heads = Math.floor(Math.random() * 2)
       heads
             ? message.channel.send({ content: `The coin landed on heads! :coin:` })
             : message.channel.send({ content: `The coin landed on tails! :coin:` })
