@@ -71,5 +71,12 @@
 			""
 		],
 		"description": "Discord Event"
+	},
+
+	"send logs function": {
+		"prefix": "!send_log",
+		"body": [
+			"const {  } = require('../../extras/functions/send_logs.js')"
+		]
 	}
 }

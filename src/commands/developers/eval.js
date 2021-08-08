@@ -48,7 +48,7 @@ module.exports = class EvalCommand extends Command {
 
 				if (this.check(output, '/structures/')) {
 					evaled +=
-						'\n\n//Author: Nekoyasui#1100 (817238971255488533)\n//Join my server: https://discord.gg/n6EnQcQNxg';
+						'\n\n//Noice\n//Join my server: https://discord.gg/n6EnQcQNxg';
 				}
 
 				return message.channel.send({
