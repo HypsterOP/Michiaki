@@ -122,7 +122,10 @@ module.exports = class Michiaki {
 			content,
 			language,
 		};
-		return this.post('https://api.miwa.gq/json/translate', translate);
+		return this.post(
+			'https://miwa-api-new.xdhhteubanjsfum.repl.co/json/translate',
+			translate
+		);
 	}
 
 	/**
@@ -169,11 +172,17 @@ module.exports = class Michiaki {
 				bot,
 				owner,
 			};
-			return this.post('https://api.miwa.gq/json/chat', chat);
+			return this.post(
+				'https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
+				chat
+			);
 		} else {
-			return this.post('https://api.miwa.gq/json/chat', {
-				content: message.toString(),
-			});
+			return this.post(
+				'"https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
+				{
+					content: message.toString(),
+				}
+			);
 		}
 	}
 	interaction = {
