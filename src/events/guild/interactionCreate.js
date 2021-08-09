@@ -20,16 +20,16 @@ module.exports = class InteractionCreateEvent extends Event {
 		const args = this.transformInteraction([...interaction.options.data]);
 
 		if (!interaction.guild) {
-			return interaction.followUp({
+			return interaction.reply({
 				content: 'Slash commands must be in a server',
 			});
 		}
 
 		const command = this.client.slashCommands.get(
-			interaction.options._subCommand
+			interaction.options._subcommand
 		);
 		if (!command) {
-			return interaction.followUp({ content: 'Error...' });
+			return interaction.reply({ content: 'Error...' });
 		}
 
 		try {
