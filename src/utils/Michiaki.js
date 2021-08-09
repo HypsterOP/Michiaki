@@ -172,12 +172,12 @@ module.exports = class Michiaki {
 				bot,
 				owner,
 			};
-			return this.post(
+			return this.get(
 				'https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
 				chat
 			);
 		} else {
-			return this.post(
+			return this.get(
 				'"https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
 				{
 					content: message.toString(),
