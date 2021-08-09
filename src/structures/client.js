@@ -33,9 +33,6 @@ module.exports = class client extends Client {
 		require('events').EventEmitter.defaultMaxListeners = 100;
 		process.setMaxListeners(100);
 
-		const nsfw = require('nekos.life');
-		const nsf = new nsfw();
-
 		const memer = require('memer-api')
 
 		const alexclient = require('alexflipnote.js')
@@ -57,8 +54,6 @@ module.exports = class client extends Client {
 		this.slashCommands = new Collection();
 
 		this.ratelimits = new Collection();
-
-		this.nsfwClient = nsf;
 
 		this.messages = { sent: 0, received: 0 };
 
