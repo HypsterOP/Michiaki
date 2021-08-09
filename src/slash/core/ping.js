@@ -13,7 +13,7 @@ module.exports = class PingCommand extends SlashCommand {
 	 * @param {import("discord.js").CommandInteractionOption{}} args
 	 */
 	async do(interaction, args) {
-		await interaction.defer({ ephemeral: true });
+		await interaction.deferReply({ ephemeral: true });
 		const embed = new Embed();
 		embed.setTitle('Ping');
 		embed.setDescription(`**\`${this.client.ws.ping}\`** ms`);
