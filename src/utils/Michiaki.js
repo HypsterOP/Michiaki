@@ -44,22 +44,33 @@ module.exports = class Michiaki {
 			});
 	}
 
-	get(url, admin = false) {
-		if (this.user?.oauth == null)
-			throw new Error("'Michiaki' => this.user.oauth cannot be null.");
-		let oauth = this.user?.oauth;
-		if (admin) oauth = this.dev?.oauth;
-		return fetch(url, {
+	get(data = {}) {
+		let { type, endpoint, body = {}, isAdmin = false } = data;
+		let oauth = this.user?.oauth ?? '';
+		const query = new URLSearchParams(body);
+		const types = ['canvas', 'json', 'text'];
+
+		if (isAdmin) oauth = this.dev?.oauth;
+		if (this.user?.oauth)
+			throw new Error("'Michiaki.get' => this.user.oauth cannot be null.");
+		if (!(type || endpoint))
+			throw new Error("'Michiaki.get' => type|endpoint cannot be null.");
+		if (!types.includes(type))
+			throw new Error(`'Michiaki.get' => type must be an ${types.join('|')}`);
+
+		return fetch(`${this.root}/${type}/${endpoint}?${query}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: 'Bearer ' + oauth,
 			},
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				return data;
+			.then((res) => {
+				if (res?.status !== 201) return res.json();
+				else if (type === 'canvas') return res.buffer();
+				else return res.json();
 			})
+			.then((data) => data)
 			.catch((err) => {
 				throw err;
 			});
@@ -144,7 +155,9 @@ module.exports = class Michiaki {
 	 */
 	chat(message, ops = {}) {
 		if (!(message instanceof Message))
-			throw new Error("'Michiaki.chat' => message doesnt instanceOf the Message.");
+			throw new Error(
+				"'Michiaki.chat' => message doesnt instanceOf the Message."
+			);
 		if (message.channel.type !== 'DM') {
 			let id = ops?.id ?? {};
 			const cache = {
@@ -208,7 +221,9 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
+					throw new Error(
+						`'Michiaki' => buttons[${i}] must be an Object typeof.`
+					);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
@@ -236,12 +251,15 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
+					throw new Error(
+						`'Michiaki' => buttons[${i}] must be an Object typeof.`
+					);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
 					);
-				if (!buttons[i]?.id) throw new Error("'Michiaki' => Please provide ID.");
+				if (!buttons[i]?.id)
+					throw new Error("'Michiaki' => Please provide ID.");
 				//check
 				const check = Object.assign(buttons[i], { isUrl: false });
 				Buttons.check.push(check);
@@ -266,12 +284,15 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
+					throw new Error(
+						`'Michiaki' => buttons[${i}] must be an Object typeof.`
+					);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
 					);
-				if (!buttons[i]?.id) throw new Error("'Michiaki' => Please provide ID.");
+				if (!buttons[i]?.id)
+					throw new Error("'Michiaki' => Please provide ID.");
 
 				//disabled
 				const disabled = new MessageButton();
@@ -362,7 +383,9 @@ module.exports = class Michiaki {
 						`'Michiaki' => menu.options[${i}] Please provide label|emoji.`
 					);
 				if (!(menu.options[i].id || menu.options[i].value))
-					throw new Error(`'Michiaki' => menu.options[${i}] Please provide value.`);
+					throw new Error(
+						`'Michiaki' => menu.options[${i}] Please provide value.`
+					);
 
 				const id = menu.options[i].id ?? menu.options[i].value;
 				const value = id ?? `option_${i}`;
@@ -611,15 +634,13 @@ module.exports = class Michiaki {
 						stringType()
 					);
 				};
-				return chn
-					.send({ content: question })
-					.then((msg) =>
-						msg.channel.awaitMessages({
-							filter,
-							max: 1,
-							time: ops?.timeout ?? 60000,
-						})
-					);
+				return chn.send({ content: question }).then((msg) =>
+					msg.channel.awaitMessages({
+						filter,
+						max: 1,
+						time: ops?.timeout ?? 60000,
+					})
+				);
 			};
 
 			const channel = ops?.channel ?? null;

@@ -107,7 +107,11 @@ module.exports = class MessageEvent extends Event {
 				city: 'Hyderabad',
 				country: 'India',
 			};
-			const chat = await michiaki.chat(message, ops);
+			 const chat = await michiaki.get({
+					type: 'json',
+					endpoint: 'chat',
+					body: { ...ops, content: message.content, id: message.author.id },
+				});
 			if (chat.error) {
 				throw new Error(chat.message);
 			}
