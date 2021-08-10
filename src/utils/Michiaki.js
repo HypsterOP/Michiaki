@@ -18,32 +18,18 @@ module.exports = class Michiaki {
 	 * @param {String} [admin.oauth]
 	 */
 	constructor(user = {}, admin = {}) {
+		this.root = 'https://api.miwa.gq';
 		this.user = user;
 		this.dev = admin;
 	}
 
-	post(url, body = {}, admin = false) {
-		if (this.user?.oauth == null)
-			throw new Error("'Michiaki' => this.user.oauth cannot be null.");
-		let oauth = this.user?.oauth;
-		if (admin) oauth = this.dev?.oauth;
-		return fetch(url, {
-			method: 'POST',
-			body: JSON.stringify(body),
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + oauth,
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				return data;
-			})
-			.catch((err) => {
-				throw err;
-			});
-	}
-
+	/**
+	 * @param {Object} data
+	 * @param {String} [data.type]
+	 * @param {String} [data.endpoint]
+	 * @param {Object} [data.body]
+	 * @param {Boolean} [data.isAdmin]
+	 */
 	get(data = {}) {
 		let { type, endpoint, body = {}, isAdmin = false } = data;
 		let oauth = this.user?.oauth ?? '';
@@ -122,24 +108,6 @@ module.exports = class Michiaki {
 	}
 
 	/**
-	 * @param {String} content
-	 * @param {Object} language
-	 * @param {String} [language.from]
-	 * @param {String} [language.to]
-	 * @return {Promise<Michiaki.translate>}
-	 */
-	translate(content, language = {}) {
-		const translate = {
-			content,
-			language,
-		};
-		return this.post(
-			'https://miwa-api-new.xdhhteubanjsfum.repl.co/json/translate',
-			translate
-		);
-	}
-
-	/**
 	 * @param {Object} message
 	 * @param {Object} ops
 	 * @param {String} [ops.prefix]
@@ -153,51 +121,7 @@ module.exports = class Michiaki {
 	 * @param {String} [ops.id.owner]
 	 * @return {Promise<Michiaki.chat>}
 	 */
-	chat(message, ops = {}) {
-		if (!(message instanceof Message))
-			throw new Error(
-				"'Michiaki.chat' => message doesnt instanceOf the Message."
-			);
-		if (message.channel.type !== 'DM') {
-			let id = ops?.id ?? {};
-			const cache = {
-				user: message.client.users.cache,
-				member: message.guild.members.cache,
-			};
 
-			const author = {
-				...cache.member.get(id.author || message.author.id).toJSON(),
-				user: cache.user.get(id.author || message.author.id).toJSON(),
-			};
-			const bot = {
-				...cache.member.get(id.bot || message.client.user.id).toJSON(),
-				//user: cache.user.get(id.bot || message.client.user.id).toJSON()
-			};
-			const owner = {
-				...cache.member.get(id.owner || '800331322089537538').toJSON(),
-				user: cache.user.get(id.owner || '800331322089537538').toJSON(),
-			};
-
-			ops.content = ops?.content ?? message.content;
-			const chat = {
-				...ops,
-				author,
-				bot,
-				owner,
-			};
-			return this.get(
-				'https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
-				chat
-			);
-		} else {
-			return this.get(
-				'"https://miwa-api-new.xdhhteubanjsfum.repl.co/json/chat',
-				{
-					content: message.toString(),
-				}
-			);
-		}
-	}
 	interaction = {
 		/**
 		 * @param {Array} buttons
@@ -221,9 +145,7 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
+					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
@@ -251,15 +173,12 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
+					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
 					);
-				if (!buttons[i]?.id)
-					throw new Error("'Michiaki' => Please provide ID.");
+				if (!buttons[i]?.id) throw new Error("'Michiaki' => Please provide ID.");
 				//check
 				const check = Object.assign(buttons[i], { isUrl: false });
 				Buttons.check.push(check);
@@ -284,15 +203,12 @@ module.exports = class Michiaki {
 				)
 					continue;
 				if (typeof buttons[i] !== 'object')
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
+					throw new Error(`'Michiaki' => buttons[${i}] must be an Object typeof.`);
 				if (!(buttons[i]?.label || buttons[i]?.emoji))
 					throw new Error(
 						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
 					);
-				if (!buttons[i]?.id)
-					throw new Error("'Michiaki' => Please provide ID.");
+				if (!buttons[i]?.id) throw new Error("'Michiaki' => Please provide ID.");
 
 				//disabled
 				const disabled = new MessageButton();
@@ -383,9 +299,7 @@ module.exports = class Michiaki {
 						`'Michiaki' => menu.options[${i}] Please provide label|emoji.`
 					);
 				if (!(menu.options[i].id || menu.options[i].value))
-					throw new Error(
-						`'Michiaki' => menu.options[${i}] Please provide value.`
-					);
+					throw new Error(`'Michiaki' => menu.options[${i}] Please provide value.`);
 
 				const id = menu.options[i].id ?? menu.options[i].value;
 				const value = id ?? `option_${i}`;
@@ -634,13 +548,15 @@ module.exports = class Michiaki {
 						stringType()
 					);
 				};
-				return chn.send({ content: question }).then((msg) =>
-					msg.channel.awaitMessages({
-						filter,
-						max: 1,
-						time: ops?.timeout ?? 60000,
-					})
-				);
+				return chn
+					.send({ content: question })
+					.then((msg) =>
+						msg.channel.awaitMessages({
+							filter,
+							max: 1,
+							time: ops?.timeout ?? 60000,
+						})
+					);
 			};
 
 			const channel = ops?.channel ?? null;
@@ -667,80 +583,6 @@ module.exports = class Michiaki {
 				}
 				resolve(collected);
 			});
-		},
-	};
-	admin = {
-		list: {
-			/**
-			 * @return {Promise<Michiaki.admin.list.user>}
-			 */
-			user: () => {
-				return this.get('https://api.miwa.gq/admin/user', true);
-			},
-			/**
-			 * @return {Promise<Michiaki.admin.list.banned>}
-			 */
-			banned: () => {
-				return this.get('https://api.miwa.gq/admin/banned', true);
-			},
-		},
-		/**
-		 * @param {String} id
-		 * @return {Promise<Michiaki.admin.delete>}
-		 */
-		delete: (id) => {
-			if (!id) throw new Error("'Michiaki' => id cannot be null.");
-			if (this.dev?.oauth == null)
-				throw new Error("'Michiaki' => this.dev.oauth cannot be null.");
-			return this.post(
-				'https://api.miwa.gq/admin/delete',
-				{
-					id,
-				},
-				true
-			);
-		},
-		/**
-		 * @param {String} id
-		 * @return {Promise<Michiaki.admin.ban>}
-		 */
-		ban: (id) => {
-			if (!id) throw new Error("'Michiaki' => id cannot be null.");
-			if (this.dev?.oauth == null)
-				throw new Error("'Michiaki' => this.dev.oauth cannot be null.");
-			return this.post(
-				'https://api.miwa.gq/admin/ban',
-				{
-					id,
-				},
-				true
-			);
-		},
-		/**
-		 * @param {String} id
-		 * @return {Promise<Michiaki.admin.unban>}
-		 */
-		unban: (id) => {
-			if (!id) throw new Error("'Michiaki' => id cannot be null.");
-			if (this.dev?.oauth == null)
-				throw new Error("'Michiaki' => this.dev.oauth cannot be null.");
-			return this.post(
-				'https://api.miwa.gq/admin/unban',
-				{
-					id,
-				},
-				true
-			);
-		},
-		/**
-		 * @return {Promise<Michiaki.admin.token>}
-		 */
-		token: (id) => {
-			if (!id) throw new Error("'Michiaki' => id cannot be null.");
-			if (this.dev?.oauth == null)
-				throw new Error("'Michiaki' => this.dev.oauth cannot be null.");
-			const generate = { id: id };
-			return this.post('https://api.miwa.gq/admin/gen', generate, true);
 		},
 	};
 
