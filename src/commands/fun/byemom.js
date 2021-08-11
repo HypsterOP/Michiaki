@@ -3,8 +3,7 @@ const { Message, MessageAttachment } = require("discord.js");
 
 module.exports = class ByeMomCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -13,15 +12,21 @@ module.exports = class ByeMomCommand extends Command {
    */
   async do(message, args) {
     try {
-      const text = args.slice(0).join(' ')
-      if(!text) return message.channel.send({ content: `Please provide some text` })
+      const text = args.slice(0).join(" ");
+      if (!text) {
+        return message.channel.send({ content: "Please provide some text" });
+      }
 
-      this.client.memer.byemom(message.author.displayAvatarURL({ format:"png" }), message.author.username, text).then(
-          image => {
-              let aa = new MessageAttachment(image, "byemom.png")
-              message.channel.send({ files: [aa] })
-          }
-      )
+      this.client.memer
+        .byemom(
+          message.author.displayAvatarURL({ format: "png" }),
+          message.author.username,
+          text
+        )
+        .then((image) => {
+          const aa = new MessageAttachment(image, "byemom.png");
+          message.channel.send({ files: [aa] });
+        });
     } catch (err) {
       return message.channel.send({ content: err });
     }

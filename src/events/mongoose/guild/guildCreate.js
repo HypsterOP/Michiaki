@@ -1,4 +1,5 @@
-const Event = require('../../../structures/event');
+/* eslint-disable no-useless-constructor */
+const Event = require("../../../structures/event");
 
 module.exports = class GuildCreateEvent extends Event {
   constructor(...args) {
@@ -6,13 +7,16 @@ module.exports = class GuildCreateEvent extends Event {
   }
 
   async do(guild) {
-    const {config} = this.mongoose.models;
+    const { config } = this.mongoose.models;
 
-    const filter = {guild: guild.id};
-    const update = {guild: guild.id};
-    const data = await config.findOneAndUpdate(filter, update, {new: true, upsert: true});
+    const filter = { guild: guild.id };
+    const update = { guild: guild.id };
+    const data = await config.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true
+    });
     if (data) {
-      log.success('Mongoose Database', guild.name + ' was registered');
+      log.success("Mongoose Database", guild.name + " was registered");
     }
   }
 };

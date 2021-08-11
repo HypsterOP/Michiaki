@@ -3,8 +3,7 @@ const { Message, MessageAttachment } = require("discord.js");
 
 module.exports = class AchieveCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -13,12 +12,16 @@ module.exports = class AchieveCommand extends Command {
    */
   async do(message, args) {
     try {
-      let text = args.slice(0).join(' ')
-      if(!text) return message.channel.send({ content: `Please provide some text.` })
+      const text = args.slice(0).join(" ");
+      if (!text) {
+        return message.channel.send({ content: "Please provide some text." });
+      }
 
-      let link = await this.client.alexflipnote.image.achievement({ text: text })
+      const link = await this.client.alexflipnote.image.achievement({
+        text
+      });
 
-       message.channel.send({ files: [link] })
+      message.channel.send({ files: [link] });
     } catch (err) {
       return message.channel.send({ content: err });
     }

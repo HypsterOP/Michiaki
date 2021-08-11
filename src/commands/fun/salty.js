@@ -3,8 +3,7 @@ const { Message } = require("discord.js");
 
 module.exports = class SaltyCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -15,11 +14,11 @@ module.exports = class SaltyCommand extends Command {
     try {
       const user = message.mentions.users.first() || message.author;
 
-      const av = user.displayAvatarURL({ format: "png" })
+      const av = user.displayAvatarURL({ format: "png" });
 
-      let link = await this.client.alexflipnote.image.salty({ image: av })
+      const link = await this.client.alexflipnote.image.salty({ image: av });
 
-      message.channel.send({ files: [link] })
+      message.channel.send({ files: [link] });
     } catch (err) {
       return message.channel.send({ content: err });
     }

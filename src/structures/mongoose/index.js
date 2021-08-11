@@ -1,38 +1,38 @@
-const models = require('./models');
-const mongoose = require('mongoose');
-const { Collection } = require('discord.js');
+/* eslint-disable no-use-before-define */
+const models = require("./models");
+const mongoose = require("mongoose");
+const { Collection } = require("discord.js");
 const collection = new Collection();
 
 const init = (client) => {
-	if (mongoose.connection.readyState !== 1) {
-		if (!process.env.MONGO_URL) {
-			throw new Error(
-				'A mongoose connection is required because there is no established connection with mongoose!'
-			);
-		}
+  if (mongoose.connection.readyState !== 1) {
+    if (!process.env.MONGO_URL) {
+      throw new Error(
+        "A mongoose connection is required because there is no established connection with mongoose!"
+      );
+    }
 
-		mongoose
-			.connect(process.env.MONGO_URL, {
-				useNewUrlParser: true,
-				useFindAndModify: false,
-				useCreateIndex: true,
-				useUnifiedTopology: true,
-			})
-			.then((x) =>
-				log.success(
-					'Mongoose Database',
-					`Connected! Database name: "${x.connections[0].name}"`
-				)
-			);
-	}
+    mongoose
+      .connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+        useUnifiedTopology: true
+      })
+      .then((x) =>
+        log.success(
+          "Mongoose Database",
+          `Connected! Database name: "${x.connections[0].name}"`
+        ));
+  }
 
-	client.on('ready', () => {
-		models.database.find().then((data) => {
-			data.forEach((value) => {
-				collection.set(value.key, value.value);
-			});
-		});
-	});
+  client.on("ready", () => {
+    models.database.find().then((data) => {
+      data.forEach((value) => {
+        collection.set(value.key, value.value);
+      });
+    });
+  });
 };
 
 /**
@@ -43,23 +43,23 @@ const init = (client) => {
  * <database>.set("test","noice")
  */
 const Set = (key, value) => {
-	if (!key) {
-		throw new TypeError(
-			'\'database\' => Please provide "key" in the field provided.'
-		);
-	}
+  if (!key) {
+    throw new TypeError(
+      "'database' => Please provide \"key\" in the field provided."
+    );
+  }
 
-	if (!value) {
-		throw new TypeError('\'database\' => Please specify a "value"');
-	}
+  if (!value) {
+    throw new TypeError("'database' => Please specify a \"value\"");
+  }
 
-	models.database.findOneAndUpdate(
-		{ key },
-		{ key, value },
-		{ upsert: true, strict: true }
-	);
-	collection.set(key, value);
-	return Get(key);
+  models.database.findOneAndUpdate(
+    { key },
+    { key, value },
+    { upsert: true, strict: true }
+  );
+  collection.set(key, value);
+  return Get(key);
 };
 
 /**
@@ -69,11 +69,11 @@ const Set = (key, value) => {
  * <database>.get("test") //Will return "noice" (if you have set it)
  */
 const Get = (key) => {
-	if (!key) {
-		throw new TypeError('\'database\' => Please specify a "key"');
-	}
+  if (!key) {
+    throw new TypeError("'database' => Please specify a \"key\"");
+  }
 
-	return collection.get(key);
+  return collection.get(key);
 };
 
 /**
@@ -83,11 +83,11 @@ const Get = (key) => {
  * <database>.has("test") // will return true if there is a key
  */
 const Has = (key) => {
-	if (!key) {
-		throw new TypeError('\'database\' => Please specify a "key"');
-	}
+  if (!key) {
+    throw new TypeError("'database' => Please specify a \"key\"");
+  }
 
-	return Boolean(Get(key));
+  return Boolean(Get(key));
 };
 
 /**
@@ -97,18 +97,18 @@ const Has = (key) => {
  * <database>.delete("test")
  */
 const Delete = (key) => {
-	if (!key) {
-		throw new TypeError('\'database\' => Please specify a "key"');
-	}
+  if (!key) {
+    throw new TypeError("'database' => Please specify a \"key\"");
+  }
 
-	return models.database
-		.findOneAndDelete({ key })
-		.then(() => collection.delete(key))
-		.catch(() => false);
+  return models.database
+    .findOneAndDelete({ key })
+    .then(() => collection.delete(key))
+    .catch(() => false);
 };
 
 module.exports = {
-	...mongoose,
-	init,
-	database: { set: Set, get: Get, has: Has, delete: Delete, collection },
+  ...mongoose,
+  init,
+  database: { set: Set, get: Get, has: Has, delete: Delete, collection }
 };

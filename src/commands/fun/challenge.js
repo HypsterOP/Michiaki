@@ -3,8 +3,7 @@ const { Message } = require("discord.js");
 
 module.exports = class ChallengeCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -13,10 +12,12 @@ module.exports = class ChallengeCommand extends Command {
    */
   async do(message, args) {
     try {
-        let text = args.slice(0).join(' ')
-        if(!text) return message.channel.send({ content: "Please specify some text." })
-      let link  = await this.client.alexflipnote.image.challenge({ text: text })
-      message.channel.send({ files: [link] })
+      const text = args.slice(0).join(" ");
+      if (!text) {
+        return message.channel.send({ content: "Please specify some text." });
+      }
+      const link = await this.client.alexflipnote.image.challenge({ text });
+      message.channel.send({ files: [link] });
     } catch (err) {
       return message.channel.send({ content: err });
     }

@@ -1,14 +1,15 @@
-const Event = require('../../../structures/event');
-const { connection } = require('mongoose');
+/* eslint-disable class-methods-use-this */
+const Event = require("../../../structures/event");
+const { connection } = require("mongoose");
 
 module.exports = class MongoDBDisconnectedEvent extends Event {
-	constructor(...args) {
-		super(...args, {
-			emitter: connection,
-		});
-	}
+  constructor(...args) {
+    super(...args, {
+      emitter: connection
+    });
+  }
 
-	async do(error) {
-		log.error('Mongoose Database', error);
-	}
+  async do(error) {
+    log.error("Mongoose Database", error);
+  }
 };

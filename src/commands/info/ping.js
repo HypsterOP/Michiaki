@@ -3,8 +3,7 @@ const { Message } = require("discord.js");
 
 module.exports = class PingCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -13,16 +12,17 @@ module.exports = class PingCommand extends Command {
    */
   async do(message, args) {
     try {
-      const msg = await message.channel.send({ content: "Pinging The servers..." })
+      const msg = await message.channel.send({
+        content: "Pinging The servers..."
+      });
       const latency = msg.createdTimestamp - message.createdTimestamp;
-      const ping = this.client.ws.ping;
+      const {ping} = this.client.ws;
 
       return msg.edit({
-          content: [
-              `API Ping: ${ping}ms`,
-              `Message Latency: ${latency}ms`
-          ].join('\n')
-      })
+        content: [`API Ping: ${ping}ms`, `Message Latency: ${latency}ms`].join(
+          "\n"
+        )
+      });
     } catch (err) {
       return message.channel.send({ content: err });
     }

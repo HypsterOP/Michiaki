@@ -1,5 +1,6 @@
-const chalk = require('chalk');
-const { MessageSelectMenu, MessageActionRow } = require('discord.js');
+/* eslint-disable prefer-const */
+const chalk = require("chalk");
+const { MessageSelectMenu, MessageActionRow } = require("discord.js");
 
 /* MENU CREATOR */
 /**
@@ -8,53 +9,55 @@ const { MessageSelectMenu, MessageActionRow } = require('discord.js');
  */
 
 const create_mh = (array) => {
-	if (!array)
-		throw new Error(
-			chalk.red.bold(
-				'The options were not provided! Make sure you provide all the options!'
-			)
-		);
-	if (array.length < 0)
-		throw new Error(
-			chalk.red.bold(`The array has to have atleast one thing to select!`)
-		);
-	let select_menu;
+  if (!array) {
+    throw new Error(
+      chalk.red.bold(
+        "The options were not provided! Make sure you provide all the options!"
+      )
+    );
+  }
+  if (array.length < 0) {
+    throw new Error(
+      chalk.red.bold("The array has to have atleast one thing to select!")
+    );
+  }
+  let select_menu;
 
-	let id = 'help-menus';
+  const id = "help-menus";
 
-	let menus = [];
+  const menus = [];
 
-	const emo = {
-		config: "⚙️",
-        info: "💥"
-	};
+  const emo = {
+    config: "⚙️",
+    info: "💥"
+  };
 
-	array.forEach((cca) => {
-		let name = cca;
-		let sName = `${emo[name.toLowerCase()]} ${name.toUpperCase()}`;
-		let tName = name.charAt(0).toUpperCase() + name.slice(1);
-		let fName = name.toUpperCase();
+  array.forEach((cca) => {
+    const name = cca;
+    const sName = `${emo[name.toLowerCase()]} ${name.toUpperCase()}`;
+    const tName = name.charAt(0).toUpperCase() + name.slice(1);
+    const fName = name.toUpperCase();
 
-		return menus.push({
-			label: sName,
-			description: `${tName} Commands`,
-			value: fName,
-		});
-	});
+    return menus.push({
+      label: sName,
+      description: `${tName} Commands`,
+      value: fName
+    });
+  });
 
-	let chicken = new MessageSelectMenu()
-		.setCustomId(id)
-		.setPlaceholder('Choose the command category')
-		.addOptions(menus);
+  const chicken = new MessageSelectMenu()
+    .setCustomId(id)
+    .setPlaceholder("Choose the command category")
+    .addOptions(menus);
 
-	select_menu = new MessageActionRow().addComponents(chicken);
+  select_menu = new MessageActionRow().addComponents(chicken);
 
-	//console.log(select_menu.components[0].options)
+  //console.log(select_menu.components[0].options)
 
-	return {
-		smenu: [select_menu],
-		sid: id,
-	};
+  return {
+    smenu: [select_menu],
+    sid: id
+  };
 };
 
 module.exports = create_mh;
