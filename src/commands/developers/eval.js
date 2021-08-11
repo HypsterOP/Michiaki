@@ -1,9 +1,3 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-throw-literal */
-/* eslint-disable prefer-regex-literals */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-eval */
-/* eslint-disable no-promise-executor-return */
 const Command = require("../../structures/command");
 const { Formatters, Message, MessageAttachment } = require("discord.js");
 
@@ -11,11 +5,19 @@ const PrettyError = require("pretty-error");
 const pe = new PrettyError();
 pe.withoutColors();
 
+const { inspect, promisify } = require("util");
+const { writeFile, readFile } = require("fs");
+
+// eslint-disable-next-line no-unused-vars
+const write = promisify(writeFile);
+// eslint-disable-next-line no-unused-vars
+const read = promisify(readFile);
+
 module.exports = class EvalCommand extends Command {
   constructor(...args) {
     super(...args, {
       ownerOnly: true,
-      usage: "<content>"
+      usage: "<content>",
     });
   }
 
@@ -30,15 +32,12 @@ module.exports = class EvalCommand extends Command {
 
     const content = args.join(" ").replace(/(^`{3}(\w+)?|`{3}$)/g, "");
     const { client } = this;
-    // If (["347342453633712128"].some((x) => x.includes(message.author.id))) return message.channel.send({ content: "No, you cant use this eval anymore,.." });
-    // if (["for (", "for(", "forEach"].some((x) => content.includes(x))) return message.channel.send({ content: "No, you cant use forloop" });
-    // if (["process", "destroy", "leave", "database", "kick", "ban", "delete", "add", "remove", "set"].some((x) => content.includes(x)) && this.client.config.bot.contributors.some((owner) => owner !== message.author.id)) return message.channel.send({ content: "Nope, you can't do that." });
     const result = new Promise((resolve, reject) => resolve(eval(content)));
 
     return result
       .then((output) => {
         if (typeof output !== "string") {
-          output = require("util").inspect(output, { depth: 3 });
+          output = inspect(output, { depth: 3 });
         }
 
         log.info("Command Evaluated", output);
@@ -48,21 +47,16 @@ module.exports = class EvalCommand extends Command {
 
         if (output.length <= 2000) {
           return message.channel.send({
-            content: Formatters.codeBlock("js", output)
+            content: Formatters.codeBlock("js", output),
           });
         }
 
-        if (this.check(output, "/structures/")) {
-          evaled +=
-            "\n\n//Noice\n//Join my server: https://discord.gg/n6EnQcQNxg";
-        }
-
         return message.channel.send({
-          files: [new MessageAttachment(Buffer.from(output), "output.json")]
+          files: [new MessageAttachment(Buffer.from(output), "output.js")],
         });
       })
       .catch((err) => {
-        err = pe.render(err) ?? err;
+        err = pe.render(err) || err;
         err = this.clean(err);
         message.channel.send({ content: Formatters.codeBlock("xl", err) });
       });
@@ -86,7 +80,7 @@ module.exports = class EvalCommand extends Command {
 
   clean(text) {
     if (typeof text === "string") {
-      const regex = new RegExp("/home/indiangaming3000/Michiaki", "g");
+      const regex = new RegExp("/home/indiangaming3000/Michiaki/", "g");
       text = text
         .replace(/`/g, `\`${String.fromCharCode(8203)}`)
         .replace(/@/g, `@${String.fromCharCode(8203)}`)
@@ -97,7 +91,8 @@ module.exports = class EvalCommand extends Command {
           this.client.token
             .split(".")
             .map((val, i) =>
-              (i > 1 ? (val = this.client.utils.generate(27)) : val))
+              i > 1 ? (val = this.client.utils.generate(27)) : val
+            )
             .join(".")
         );
     }
