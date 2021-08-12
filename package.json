@@ -36,7 +36,7 @@
 	},
 	"dependencies": {
 		"@discordjs/opus": "^0.5.3",
-		"@discordjs/voice": "^0.5.5",
+		"@discordjs/voice": "^0.6.0",
 		"@wildpeaks/eslint-config-commonjs": "^13.1.0",
 		"@wildpeaks/prettier-config": "^13.1.0",
 		"alexflipnote.js": "^2.5.0",
