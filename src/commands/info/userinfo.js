@@ -97,15 +97,15 @@ module.exports = class UserinfoCommand extends Command {
             Account Created On: ${Formatters.time(user.user.createdAt)}
             Avatar: [Link](${user.user.displayAvatarURL({ dynamic: true })})
             Badges: ${flags}
-            `
+            `, true
         )
         .addField(`Precense`,
-        `Status: ${userStat}`)
+        `Status: ${userStat}`, true)
 
         .addField(`Sever Member Info`, 
         `Booster: ${user.premiumSince ? "Yes" : "No"}
         Nickname: ${user.nickname ? user.nickname : "No Nickname"}
-        Joined server on: ${Formatters.time(user.joinedAt)}`
+        Joined server on: ${Formatters.time(user.joinedAt)}`, true
         )
 
         .setColor('RANDOM')
