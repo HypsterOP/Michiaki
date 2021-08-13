@@ -14,9 +14,8 @@ module.exports = class CoinflipCommand extends SlashCommand {
    */
   async do(interaction, args) {
     const heads = Math.floor(Math.random() * 2);
-    interaction.deferReply({ ephemeral: true });
     heads
-      ? interaction.editReply({ content: "The coin landed on heads! :coin:" })
-      : interaction.editReply({ content: "The coin landed on tails! :coin:" });
+      ? interaction.followUp({ content: "The coin landed on heads! :coin:", ephemeral: true })
+      : interaction.followUp({ content: "The coin landed on tails! :coin:", ephemeral: true });
   }
 };

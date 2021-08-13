@@ -6,7 +6,7 @@ module.exports = class AchievementCommand extends SlashCommand {
     super(...args, {
       options: [
         {
-          name: "text",
+          name: "word",
           type: "STRING",
           description: "The text to put in the image",
           required: true
@@ -20,11 +20,8 @@ module.exports = class AchievementCommand extends SlashCommand {
    * @param {import('discord.js').CommandInteractionOption[]} args
    */
   async do(interaction, args) {
-    const { text } = interaction.options.get("text");
-    const image = await this.client.alexflipnote.image.achievement({
-      text
-    });
-    interaction.deferReply({ ephemeral: true });
-    interaction.reply({ files: [image] });
+    const word = interaction.options.getString("word");
+    const image = await this.client.alexflipnote.image.achievement({ text: word });
+    interaction.followUp({ files: [image], ephemeral: true })
   }
 };
