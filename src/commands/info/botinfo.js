@@ -6,9 +6,12 @@ const mongoose = require("mongoose");
 const ms = require("ms");
 const os = require("os");
 const version1 = require("discord.js").version;
-const { mem, cpu } = require("node-os-utils");
-const { Message } = require("discord.js");
+var osu = require("node-os-utils");
+const { cpu, mem } = osu;
+const { Message, MessageEmbed, Formatters } = require("discord.js");
 const { version } = require("../../../package.json");
+const { cpuUsage } = require("process");
+const Meme = require("memer-api");
 
 module.exports = class BotInfoCommand extends Command {
   constructor(...args) {
@@ -47,19 +50,44 @@ module.exports = class BotInfoCommand extends Command {
         const CPU = percent.toFixed(2);
         const { totalMemMb, usedMemMb } = await mem.info();
 
-        message.channel.send({
-          content: `ℹ️About **${userclient}** | v${version}\`\`\`fix
-Developer: HypsterOP#5687
-Library: discord.js, version: ${version1}
-Servers: ${guilds}
+        const embed = new MessageEmbed()
+          .setAuthor(
+            `${this.client.user.username}'s Stats`,
+            this.client.user.displayAvatarURL({ dynamic: true })
+          )
+          .addField(
+            `*General Information*`,
+            `\`\`\`Ping: ${this.client.ws.ping}ms
+Uptime: ${uptime}
+Version: ${version}
+Library: Discord.js ${version1}
+Language: NodeJS
+Servers: ${this.client.guilds.cache.size}
 Users: ${users}
-Latest Reboot: ${uptime} ago
+Channels: ${channels}
+Commands: ${this.client.commands.size}
+\`\`\``,
+            true
+          )
+
+          .addField(
+            `*Team*`,
+            `\`\`\`Developers:\n: !    HypsterOP ᴹᴳ#5687\n: Nekoyasui#1100
+\`\`\``,
+            true
+          )
+
+          .addField(
+            `*Bot Stats*`,
+            `\`\`\`Operating System: ${process.platform}
+CPU: ${cpuModel}
+Cores: ${cores}
 RAM: ${totalMemMb}MB
-Commands Loaded: ${commands}
-Database Entries: ${totalEntries}
-\`\`\`
-      `
-        });
+\`\`\``, true)
+
+          .setColor("AQUA");
+
+        message.channel.send({ embeds: [embed] });
       });
     } catch (err) {
       return message.channel.send({ content: err });
