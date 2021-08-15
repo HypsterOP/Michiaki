@@ -13,7 +13,7 @@ const shards = new ShardingManager("./src/index.js", {
 });
 shards.on("shardCreate", (shard) => {
   console.log(
-    `[${String(new Date()).split(" ", 5).join(" ")}] Spawned ${shard.id}`
+    `[${String(new Date()).split(" ", 5).join(" ")}] Spawned ${shard.id}.`
   );
 });
 
