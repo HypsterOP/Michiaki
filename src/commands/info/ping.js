@@ -13,15 +13,15 @@ module.exports = class PingCommand extends Command {
   async do(message, args) {
     try {
       const msg = await message.channel.send({
-        content: "Pinging The servers..."
+        content: "Pinging The servers...",
       });
       const latency = msg.createdTimestamp - message.createdTimestamp;
-      const {ping} = this.client.ws;
+      const { ping } = this.client.ws;
 
       return msg.edit({
         content: [`API Ping: ${ping}ms`, `Message Latency: ${latency}ms`].join(
           "\n"
-        )
+        ),
       });
     } catch (err) {
       return message.channel.send({ content: err });

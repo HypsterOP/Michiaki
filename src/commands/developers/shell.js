@@ -5,7 +5,7 @@ const { Formatters, Message, MessageAttachment } = require("discord.js");
 module.exports = class ShellCommand extends Command {
   constructor(...args) {
     super(...args, {
-      ownerOnly: true
+      ownerOnly: true,
     });
   }
 
@@ -19,18 +19,18 @@ module.exports = class ShellCommand extends Command {
 
     if (error) {
       return message.channel.send({
-        content: Formatters.codeBlock("bash", error)
+        content: Formatters.codeBlock("bash", error),
       });
     }
 
     if (stdout.length <= 2000) {
       return message.channel.send({
-        content: Formatters.codeBlock("bash", stdout)
+        content: Formatters.codeBlock("bash", stdout),
       });
     }
 
     return message.channel.send({
-      files: [new MessageAttachment(Buffer.from(stdout), "output.sh")]
+      files: [new MessageAttachment(Buffer.from(stdout), "output.sh")],
     });
   }
 };

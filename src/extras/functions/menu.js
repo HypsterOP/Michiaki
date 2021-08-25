@@ -29,7 +29,7 @@ const create_mh = (array) => {
 
   const emo = {
     config: "⚙️",
-    info: "💥"
+    info: "💥",
   };
 
   array.forEach((cca) => {
@@ -41,7 +41,7 @@ const create_mh = (array) => {
     return menus.push({
       label: sName,
       description: `${tName} Commands`,
-      value: fName
+      value: fName,
     });
   });
 
@@ -56,7 +56,7 @@ const create_mh = (array) => {
 
   return {
     smenu: [select_menu],
-    sid: id
+    sid: id,
   };
 };
 

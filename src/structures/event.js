@@ -23,7 +23,9 @@ module.exports = class Event {
     this.category = { name: directory.split("/").pop() };
     this.type = event?.once ? "once" : "on";
     this.emitter =
-      (typeof event?.emitter === "string" ? this.client[event.emitter] : event.emitter) || this.client;
+      (typeof event?.emitter === "string"
+        ? this.client[event.emitter]
+        : event.emitter) || this.client;
     this.enable = Boolean(event?.enable ?? true);
   }
 

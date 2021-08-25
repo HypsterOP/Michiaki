@@ -1,14 +1,14 @@
-const Command = require("../../structures/command")
-const { Message } = require("discord.js")
+const Command = require("../../structures/command");
+const { Message } = require("discord.js");
 
-const https = require("https")
+const https = require("https");
 
 module.exports = class ContributersCommand extends Command {
   constructor(...args) {
     super(...args, {
       id: "Contributers",
       description: "See the list of people contributing on github!",
-    })
+    });
   }
 
   /**
@@ -30,27 +30,27 @@ module.exports = class ContributersCommand extends Command {
               },
             },
             (response) => {
-              response.setEncoding("utf8")
-              let body = ""
+              response.setEncoding("utf8");
+              let body = "";
 
-              response.on("data", (data) => (body += data))
+              response.on("data", (data) => (body += data));
 
               response.on("end", () => {
                 try {
-                  resolve(JSON.parse(body))
+                  resolve(JSON.parse(body));
                 } catch (error) {
-                  reject(error)
+                  reject(error);
                 }
-              })
+              });
 
-              response.on("error", (error) => reject(error))
+              response.on("error", (error) => reject(error));
             }
           )
-          .on("error", (error) => reject(error))
-      })
+          .on("error", (error) => reject(error));
+      });
 
       list.then((contributors) => {
-        let listContri = "A list of People Contributing to Michiaki repo\n\n\n"
+        let listContri = "A list of People Contributing to Michiaki repo\n\n\n";
 
         contributors
           .filter(
@@ -61,12 +61,12 @@ module.exports = class ContributersCommand extends Command {
           .map(
             (contributor) =>
               (listContri += ` *${contributor.login} - ${contributor.contributions} Contributions.*\n\n`)
-          )
+          );
 
-        message.channel.send({ content: listContri })
-      })
+        message.channel.send({ content: listContri });
+      });
     } catch (err) {
-      return message.channel.send({ content: err })
+      return message.channel.send({ content: err });
     }
   }
-}
+};

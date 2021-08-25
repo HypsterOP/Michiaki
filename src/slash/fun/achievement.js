@@ -9,9 +9,9 @@ module.exports = class AchievementCommand extends SlashCommand {
           name: "word",
           type: "STRING",
           description: "The text to put in the image",
-          required: true
-        }
-      ]
+          required: true,
+        },
+      ],
     });
   }
 
@@ -21,7 +21,9 @@ module.exports = class AchievementCommand extends SlashCommand {
    */
   async do(interaction, args) {
     const word = interaction.options.getString("word");
-    const image = await this.client.alexflipnote.image.achievement({ text: word });
-    interaction.followUp({ files: [image], ephemeral: true })
+    const image = await this.client.alexflipnote.image.achievement({
+      text: word,
+    });
+    interaction.followUp({ files: [image], ephemeral: true });
   }
 };

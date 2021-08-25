@@ -4,7 +4,7 @@ const { CommandInteraction } = require("discord.js");
 module.exports = class PingCommand extends SlashCommand {
   constructor(...args) {
     super(...args, {
-      description: "Health check"
+      description: "Health check",
     });
   }
 

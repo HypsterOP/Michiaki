@@ -259,13 +259,17 @@ module.exports = class Command {
             timeout: 10000,
             cnt: require("common-tags").stripIndents(`
 					\`📛\` Missing arguments: \`\`${this.usages[i].req}\`\`${
-  this.usages[i].opt ? `\n\`⚙️\` Optional arguments: ${
-    this.usages[i].opt.includes("|") ? this.usages[i].opt
-      .split("|")
-      .map((x) => `\`\`${x}\`\``)
-      .join(" ") : `\`\`${this.usages[i].opt}\`\``
-  }` : ""
-}
+              this.usages[i].opt
+                ? `\n\`⚙️\` Optional arguments: ${
+                    this.usages[i].opt.includes("|")
+                      ? this.usages[i].opt
+                          .split("|")
+                          .map((x) => `\`\`${x}\`\``)
+                          .join(" ")
+                      : `\`\`${this.usages[i].opt}\`\``
+                  }`
+                : ""
+            }
 					\`📖\` Example: \`\`${this.name} ${this.usage}\`\`
 					`),
           };

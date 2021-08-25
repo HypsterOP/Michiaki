@@ -6,7 +6,7 @@ const Event = require("../../structures/event");
 module.exports = class MessageEvent extends Event {
   constructor(...args) {
     super(...args, {
-      once: false
+      once: false,
     });
   }
 
@@ -56,7 +56,7 @@ module.exports = class MessageEvent extends Event {
           pe.withoutColors();
           error = pe.render(error) ?? error;
           return message.channel.send({
-            content: require("discord.js").Formatters.codeBlock("xl", error)
+            content: require("discord.js").Formatters.codeBlock("xl", error),
           });
         }
 
@@ -95,7 +95,9 @@ module.exports = class MessageEvent extends Event {
 
       if (message.content === `<@!${this.client.user.id}>`) {
         return message.channel.send({
-          content: prefix ? `In this guild, my prefix is **${prefix}**` : "In this guild, I don't even have a prefix."
+          content: prefix
+            ? `In this guild, my prefix is **${prefix}**`
+            : "In this guild, I don't even have a prefix.",
         });
       }
 
@@ -104,12 +106,12 @@ module.exports = class MessageEvent extends Event {
         invite: "https://dsc.gg/Michiaki-server",
         description: "api for Michiaki.",
         city: "Hyderabad",
-        country: "India"
+        country: "India",
       };
       const chat = await michiaki.get({
         type: "json",
         endpoint: "chat",
-        body: { ...ops, content: message.content, id: message.author.id }
+        body: { ...ops, content: message.content, id: message.author.id },
       });
       if (chat.error) {
         throw new Error(chat.message);

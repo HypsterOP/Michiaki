@@ -34,7 +34,7 @@ const limit = {
   AUTHOR_NAME: 256,
   FIELD: 25,
   FIELD_NAME: 256,
-  FILE_VALUE: 1024
+  FILE_VALUE: 1024,
 };
 /**
  * @extends {MessageEmbed}
@@ -77,7 +77,7 @@ module.exports = class Embed extends MessageEmbed {
   setFooter(text, iconURL) {
     this.footer = {
       text: ellipsis(normalize(text), limit.FOOTER),
-      iconURL
+      iconURL,
     };
     return this;
   }
@@ -91,7 +91,7 @@ module.exports = class Embed extends MessageEmbed {
     this.author = {
       name: ellipsis(normalize(name), limit.AUTHOR_NAME),
       iconURL,
-      url
+      url,
     };
     return this;
   }
@@ -104,7 +104,7 @@ module.exports = class Embed extends MessageEmbed {
     return this.addFields({
       name: ellipsis(normalize(name), limit.FIELD_NAME),
       value: ellipsis(normalize(value), limit.FILE_VALUE),
-      inline
+      inline,
     });
   }
 
@@ -112,7 +112,7 @@ module.exports = class Embed extends MessageEmbed {
     return this.addFields({
       name: ellipsis(normalize(name), limit.FIELD_NAME),
       value: ellipsis(normalize(value), limit.FILE_VALUE),
-      inline
+      inline,
     });
   }
 
@@ -127,7 +127,7 @@ module.exports = class Embed extends MessageEmbed {
     return {
       name: normalize(name),
       value: normalize(value),
-      inline
+      inline,
     };
   }
 };

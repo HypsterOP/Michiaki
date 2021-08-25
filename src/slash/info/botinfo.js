@@ -14,8 +14,7 @@ const version1 = require("discord.js").version;
 
 module.exports = class BotInfoCommand extends SlashCommand {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -61,7 +60,7 @@ RAM: ${totalMemMb}MB
 Commands Loaded: ${commands}
 Database Entries: ${totalEntries}
 \`\`\`
-      `
+      `,
       });
     });
   }

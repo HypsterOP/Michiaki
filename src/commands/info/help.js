@@ -6,7 +6,7 @@ const { Formatters, Message } = require("discord.js");
 module.exports = class HelpCommand extends Command {
   constructor(...args) {
     super(...args, {
-      usage: ""
+      usage: "",
     });
   }
 
@@ -31,11 +31,15 @@ module.exports = class HelpCommand extends Command {
         require("common-tags").stripIndents(`
         ${command.description}\n
           **❯ Aliases:** ${
-  command.aliases.length ? command.aliases.map((alias) => `\`\`${alias}\`\``).join(", ") : "No alias provided"
-}
+            command.aliases.length
+              ? command.aliases.map((alias) => `\`\`${alias}\`\``).join(", ")
+              : "No alias provided"
+          }
           **❯ Usage:** ${
-  command.usage.length ? `\`\`\`${command.usage}\`\`\`` : "No usage provided"
-}
+            command.usage.length
+              ? `\`\`\`${command.usage}\`\`\``
+              : "No usage provided"
+          }
         `)
       );
       return message.channel.send({ embeds: [embed] });
@@ -57,13 +61,13 @@ module.exports = class HelpCommand extends Command {
     const menu = {
       id: "selectnow",
       placeholder: "Select a category.",
-      options: []
+      options: [],
     };
     menu.options.push({
       id: "select_home",
       label: "Back to Home",
       emoji: "🏠",
-      description: "Return to the main category."
+      description: "Return to the main category.",
     });
 
     const collection = this.client.commands.map(({ category }) => category);
@@ -105,7 +109,7 @@ module.exports = class HelpCommand extends Command {
         emoji: category?.emoji,
         description:
           category?.description ??
-          `Get commands from the ${category?.name} category.`
+          `Get commands from the ${category?.name} category.`,
       };
       menu.options.push(select);
     }
@@ -114,7 +118,7 @@ module.exports = class HelpCommand extends Command {
       channel: message.channel,
       userID: message.author.id,
       embeds,
-      menu
+      menu,
     });
   }
 

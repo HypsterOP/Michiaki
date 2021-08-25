@@ -4,7 +4,7 @@ const nicknames = new mongoose.Schema(
   {
     past: { type: String, default: null },
     current: { type: String, default: null },
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
   },
   { _id: false }
 );
@@ -17,6 +17,6 @@ module.exports = mongoose.model(
     past: { type: String, default: null },
     current: { type: String, default: null },
     list: [nicknames],
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
   })
 );

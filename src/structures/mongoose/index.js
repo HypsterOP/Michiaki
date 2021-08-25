@@ -17,13 +17,14 @@ const init = (client) => {
         useNewUrlParser: true,
         useFindAndModify: false,
         useCreateIndex: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
       })
       .then((x) =>
         log.success(
           "Mongoose Database",
           `Connected! Database name: "${x.connections[0].name}"`
-        ));
+        )
+      );
   }
 
   client.on("ready", () => {
@@ -110,5 +111,5 @@ const Delete = (key) => {
 module.exports = {
   ...mongoose,
   init,
-  database: { set: Set, get: Get, has: Has, delete: Delete, collection }
+  database: { set: Set, get: Get, has: Has, delete: Delete, collection },
 };

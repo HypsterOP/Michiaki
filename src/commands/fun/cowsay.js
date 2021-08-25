@@ -1,12 +1,11 @@
 const Command = require("../../structures/command");
 const { Message } = require("discord.js");
 
-const cowsay = require('cowsay');
+const cowsay = require("cowsay");
 
 module.exports = class CowSayCommand extends Command {
   constructor(...args) {
-    super(...args, {
-    });
+    super(...args, {});
   }
 
   /**
@@ -15,11 +14,14 @@ module.exports = class CowSayCommand extends Command {
    */
   async do(message, args) {
     try {
-      const text = args.slice(0).join(' ');
+      const text = args.slice(0).join(" ");
 
-      if(!text) return message.channel.send({ content: `Please provide some text...` })
+      if (!text)
+        return message.channel.send({ content: `Please provide some text...` });
 
-      message.channel.send({ content: `\`\`\`${cowsay.say({ text: text, e: "OO" })}\`\`\`` })
+      message.channel.send({
+        content: `\`\`\`${cowsay.say({ text: text, e: "OO" })}\`\`\``,
+      });
     } catch (err) {
       return message.channel.send({ content: err });
     }

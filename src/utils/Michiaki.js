@@ -123,337 +123,343 @@ module.exports = class Michiaki {
    */
 
   interaction = {
-		/**
-		 * @param {Array} buttons
-		 * @param {Object} row
-		 * @param {Number} [row.limit]
-		 */
-		button: (buttons = [], row = {}) => {
-			if (!Array.isArray(buttons))
-				throw new SyntaxError("'Michiaki' => buttons must be an Array typeof.");
-			if (!row?.limit || row.limit >= 5)
-				row.limit = 5;
-			var Buttons = {};
-			Buttons.enabled = [];
-			Buttons.disabled = [];
-			Buttons.url = [];
-			Buttons.check = [];
+    /**
+     * @param {Array} buttons
+     * @param {Object} row
+     * @param {Number} [row.limit]
+     */
+    button: (buttons = [], row = {}) => {
+      if (!Array.isArray(buttons))
+        throw new SyntaxError("'Michiaki' => buttons must be an Array typeof.");
+      if (!row?.limit || row.limit >= 5) row.limit = 5;
+      var Buttons = {};
+      Buttons.enabled = [];
+      Buttons.disabled = [];
+      Buttons.url = [];
+      Buttons.check = [];
 
-			for (var i = 0; i < buttons.length; i++) {
-				if (buttons[i] &&
-					!(buttons[i].style.toUpperCase() === "LINK" || buttons[i].url))
-					continue;
-				if (typeof buttons[i] !== "object")
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
-				if (!(buttons[i]?.label || buttons[i]?.emoji))
-					throw new Error(
-						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
-					);
-				//check
-				const check = Object.assign(buttons[i], {
-					id: "LINK_" + i,
-					isUrl: true,
-				});
-				Buttons.check.push(check);
+      for (var i = 0; i < buttons.length; i++) {
+        if (
+          buttons[i] &&
+          !(buttons[i].style.toUpperCase() === "LINK" || buttons[i].url)
+        )
+          continue;
+        if (typeof buttons[i] !== "object")
+          throw new Error(
+            `'Michiaki' => buttons[${i}] must be an Object typeof.`
+          );
+        if (!(buttons[i]?.label || buttons[i]?.emoji))
+          throw new Error(
+            `'Michiaki' => buttons[${i}] Please provide label|emoji.`
+          );
+        //check
+        const check = Object.assign(buttons[i], {
+          id: "LINK_" + i,
+          isUrl: true,
+        });
+        Buttons.check.push(check);
 
-				//url
-				const url = new MessageButton();
-				url.setStyle("LINK");
-				url.setURL(buttons[i].url);
-				if (buttons[i].label)
-					url.setLabel(buttons[i].label);
-				if (buttons[i].emoji)
-					url.setEmoji(buttons[i].emoji);
-				Buttons.url.push(url);
-			}
+        //url
+        const url = new MessageButton();
+        url.setStyle("LINK");
+        url.setURL(buttons[i].url);
+        if (buttons[i].label) url.setLabel(buttons[i].label);
+        if (buttons[i].emoji) url.setEmoji(buttons[i].emoji);
+        Buttons.url.push(url);
+      }
 
-			for (var i = 0; i < buttons.length; i++) {
-				if (buttons[i] &&
-					(buttons[i].style.toUpperCase() === "LINK" || buttons[i].url))
-					continue;
-				if (typeof buttons[i] !== "object")
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
-				if (!(buttons[i]?.label || buttons[i]?.emoji))
-					throw new Error(
-						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
-					);
-				if (!buttons[i]?.id)
-					throw new Error("'Michiaki' => Please provide ID.");
-				//check
-				const check = Object.assign(buttons[i], { isUrl: false });
-				Buttons.check.push(check);
+      for (var i = 0; i < buttons.length; i++) {
+        if (
+          buttons[i] &&
+          (buttons[i].style.toUpperCase() === "LINK" || buttons[i].url)
+        )
+          continue;
+        if (typeof buttons[i] !== "object")
+          throw new Error(
+            `'Michiaki' => buttons[${i}] must be an Object typeof.`
+          );
+        if (!(buttons[i]?.label || buttons[i]?.emoji))
+          throw new Error(
+            `'Michiaki' => buttons[${i}] Please provide label|emoji.`
+          );
+        if (!buttons[i]?.id)
+          throw new Error("'Michiaki' => Please provide ID.");
+        //check
+        const check = Object.assign(buttons[i], { isUrl: false });
+        Buttons.check.push(check);
 
-				//enabled
-				const enabled = new MessageButton();
-				if (styles.some((style) => style === buttons[i].style.toUpperCase())) {
-					enabled.setStyle(buttons[i].style);
-				} else {
-					enabled.setStyle("SECONDARY");
-				}
-				if (buttons[i].label)
-					enabled.setLabel(buttons[i].label);
-				if (buttons[i].emoji)
-					enabled.setEmoji(buttons[i].emoji);
-				enabled.setCustomId(buttons[i].id);
-				Buttons.enabled.push(enabled);
-			}
+        //enabled
+        const enabled = new MessageButton();
+        if (styles.some((style) => style === buttons[i].style.toUpperCase())) {
+          enabled.setStyle(buttons[i].style);
+        } else {
+          enabled.setStyle("SECONDARY");
+        }
+        if (buttons[i].label) enabled.setLabel(buttons[i].label);
+        if (buttons[i].emoji) enabled.setEmoji(buttons[i].emoji);
+        enabled.setCustomId(buttons[i].id);
+        Buttons.enabled.push(enabled);
+      }
 
-			for (let i = 0; i < buttons.length; i++) {
-				if (buttons[i] &&
-					(buttons[i].style.toUpperCase() === "LINK" || buttons[i].url))
-					continue;
-				if (typeof buttons[i] !== "object")
-					throw new Error(
-						`'Michiaki' => buttons[${i}] must be an Object typeof.`
-					);
-				if (!(buttons[i]?.label || buttons[i]?.emoji))
-					throw new Error(
-						`'Michiaki' => buttons[${i}] Please provide label|emoji.`
-					);
-				if (!buttons[i]?.id)
-					throw new Error("'Michiaki' => Please provide ID.");
+      for (let i = 0; i < buttons.length; i++) {
+        if (
+          buttons[i] &&
+          (buttons[i].style.toUpperCase() === "LINK" || buttons[i].url)
+        )
+          continue;
+        if (typeof buttons[i] !== "object")
+          throw new Error(
+            `'Michiaki' => buttons[${i}] must be an Object typeof.`
+          );
+        if (!(buttons[i]?.label || buttons[i]?.emoji))
+          throw new Error(
+            `'Michiaki' => buttons[${i}] Please provide label|emoji.`
+          );
+        if (!buttons[i]?.id)
+          throw new Error("'Michiaki' => Please provide ID.");
 
-				//disabled
-				const disabled = new MessageButton();
-				if (styles.some((style) => style === buttons[i].style.toUpperCase())) {
-					disabled.setStyle(buttons[i].style);
-				} else {
-					disabled.setStyle("SECONDARY");
-				}
-				if (buttons[i]?.label)
-					disabled.setLabel(buttons[i]?.label);
-				if (buttons[i]?.emoji)
-					disabled.setEmoji(buttons[i]?.emoji);
-				disabled.setCustomId(`${buttons[i]?.id}_disabled`);
-				disabled.setDisabled(true);
-				Buttons.disabled.push(disabled);
-			}
+        //disabled
+        const disabled = new MessageButton();
+        if (styles.some((style) => style === buttons[i].style.toUpperCase())) {
+          disabled.setStyle(buttons[i].style);
+        } else {
+          disabled.setStyle("SECONDARY");
+        }
+        if (buttons[i]?.label) disabled.setLabel(buttons[i]?.label);
+        if (buttons[i]?.emoji) disabled.setEmoji(buttons[i]?.emoji);
+        disabled.setCustomId(`${buttons[i]?.id}_disabled`);
+        disabled.setDisabled(true);
+        Buttons.disabled.push(disabled);
+      }
 
-			let Row = {
-				Disabled: [],
-				Enabled: [],
-				URL: [],
-			};
-			let Comp = {
-				Enabled: _.chunk(Buttons.enabled, Number(row.limit)),
-				Disabled: _.chunk(Buttons.disabled, Number(row.limit)),
-			};
+      let Row = {
+        Disabled: [],
+        Enabled: [],
+        URL: [],
+      };
+      let Comp = {
+        Enabled: _.chunk(Buttons.enabled, Number(row.limit)),
+        Disabled: _.chunk(Buttons.disabled, Number(row.limit)),
+      };
 
-			for (let i = 0; i < Comp.Enabled.length; i++) {
-				const enabled = new MessageActionRow().addComponents(Comp.Enabled[i]);
-				Row.Enabled = [...Row.Enabled, enabled];
-			}
+      for (let i = 0; i < Comp.Enabled.length; i++) {
+        const enabled = new MessageActionRow().addComponents(Comp.Enabled[i]);
+        Row.Enabled = [...Row.Enabled, enabled];
+      }
 
-			for (let i = 0; i < Comp.Disabled.length; i++) {
-				const disabled = new MessageActionRow().addComponents(Comp.Disabled[i]);
-				Row.Disabled = [...Row.Disabled, disabled];
-			}
+      for (let i = 0; i < Comp.Disabled.length; i++) {
+        const disabled = new MessageActionRow().addComponents(Comp.Disabled[i]);
+        Row.Disabled = [...Row.Disabled, disabled];
+      }
 
-			if (Buttons.url.length > 0) {
-				Comp.URL = _.chunk(Buttons.url, Number(row.limit));
-				for (let i = 0; i < Comp.URL.length; i++) {
-					const rows = new MessageActionRow().addComponents(Comp.URL[i]);
-					Row.Enabled = [...Row.Enabled, rows];
-					Row.Disabled = [...Row.Disabled, rows];
-					Row.URL = [rows];
-				}
-			}
-			return {
-				check: _.sortBy(Buttons.check, { isUrl: true }),
-				row: Row,
-			};
-		},
-		/**
-		 * @param {Object} menu
-		 * @param {String} [menu.id]
-		 * @param {String} [menu.placeholder]
-		 * @param {Object} [menu.values]
-		 * @param {Number} [menu.values.min]
-		 * @param {Number} [menu.values.max]
-		 * @param {Object[]} [menu.options]
-		 * @param {String} [menu.options[].value]
-		 * @param {String} [menu.options[].emoji]
-		 * @param {String} [menu.options[].label]
-		 * @param {String} [menu.options[].description]
-		 */
-		menu: (menu) => {
-			if (!menu.id)
-				throw new Error("'Michiaki' => menu.id Please provide ID.");
-			if (!Array.isArray(menu.options))
-				throw new SyntaxError(
-					"'Michiaki' => menu.options must be an Array typeof."
-				);
+      if (Buttons.url.length > 0) {
+        Comp.URL = _.chunk(Buttons.url, Number(row.limit));
+        for (let i = 0; i < Comp.URL.length; i++) {
+          const rows = new MessageActionRow().addComponents(Comp.URL[i]);
+          Row.Enabled = [...Row.Enabled, rows];
+          Row.Disabled = [...Row.Disabled, rows];
+          Row.URL = [rows];
+        }
+      }
+      return {
+        check: _.sortBy(Buttons.check, { isUrl: true }),
+        row: Row,
+      };
+    },
+    /**
+     * @param {Object} menu
+     * @param {String} [menu.id]
+     * @param {String} [menu.placeholder]
+     * @param {Object} [menu.values]
+     * @param {Number} [menu.values.min]
+     * @param {Number} [menu.values.max]
+     * @param {Object[]} [menu.options]
+     * @param {String} [menu.options[].value]
+     * @param {String} [menu.options[].emoji]
+     * @param {String} [menu.options[].label]
+     * @param {String} [menu.options[].description]
+     */
+    menu: (menu) => {
+      if (!menu.id) throw new Error("'Michiaki' => menu.id Please provide ID.");
+      if (!Array.isArray(menu.options))
+        throw new SyntaxError(
+          "'Michiaki' => menu.options must be an Array typeof."
+        );
 
-			let Menu = {
-				check: {
-					id: menu?.id ?? "select",
-					placeholder: menu?.placeholder ?? "Select any option.",
-					values: {
-						min: menu?.values?.min ?? 1,
-						max: menu?.values?.max ?? 1,
-					},
-					options: [],
-				},
-			};
-			for (var i = 0; i < menu.options.length; i++) {
-				if (typeof menu?.options[i] !== "object")
-					throw new Error(
-						`'Michiaki' => menu.options[${i}] must be an Object typeof.`
-					);
-				if (!(menu.options[i].label || menu.options[i].emoji))
-					throw new Error(
-						`'Michiaki' => menu.options[${i}] Please provide label|emoji.`
-					);
-				if (!(menu.options[i].id || menu.options[i].value))
-					throw new Error(
-						`'Michiaki' => menu.options[${i}] Please provide value.`
-					);
+      let Menu = {
+        check: {
+          id: menu?.id ?? "select",
+          placeholder: menu?.placeholder ?? "Select any option.",
+          values: {
+            min: menu?.values?.min ?? 1,
+            max: menu?.values?.max ?? 1,
+          },
+          options: [],
+        },
+      };
+      for (var i = 0; i < menu.options.length; i++) {
+        if (typeof menu?.options[i] !== "object")
+          throw new Error(
+            `'Michiaki' => menu.options[${i}] must be an Object typeof.`
+          );
+        if (!(menu.options[i].label || menu.options[i].emoji))
+          throw new Error(
+            `'Michiaki' => menu.options[${i}] Please provide label|emoji.`
+          );
+        if (!(menu.options[i].id || menu.options[i].value))
+          throw new Error(
+            `'Michiaki' => menu.options[${i}] Please provide value.`
+          );
 
-				const id = menu.options[i].id ?? menu.options[i].value;
-				const value = id ?? `option_${i}`;
-				const label = menu.options[i].label ?? "Selection";
-				const description = menu.options[i].description ?? "No description";
-				let check = {
-					value,
-					label,
-					description,
-				};
-				if (menu.options[i]?.emoji)
-					check.emoji = menu.options[i]?.emoji;
-				Menu.check.options.push(check);
-			}
-			const component = new MessageSelectMenu();
-			component.setCustomId(Menu.check.id + Math.floor(Math.random() * 100));
-			component.setPlaceholder(Menu.check.placeholder);
-			component.setMinValues(Menu.check.values.min);
-			component.setMaxValues(Menu.check.values.max);
-			component.addOptions(Menu.check.options);
+        const id = menu.options[i].id ?? menu.options[i].value;
+        const value = id ?? `option_${i}`;
+        const label = menu.options[i].label ?? "Selection";
+        const description = menu.options[i].description ?? "No description";
+        let check = {
+          value,
+          label,
+          description,
+        };
+        if (menu.options[i]?.emoji) check.emoji = menu.options[i]?.emoji;
+        Menu.check.options.push(check);
+      }
+      const component = new MessageSelectMenu();
+      component.setCustomId(Menu.check.id + Math.floor(Math.random() * 100));
+      component.setPlaceholder(Menu.check.placeholder);
+      component.setMinValues(Menu.check.values.min);
+      component.setMaxValues(Menu.check.values.max);
+      component.addOptions(Menu.check.options);
 
-			const Row = [new MessageActionRow().addComponents(component)];
-			return {
-				...Menu,
-				row: Row,
-			};
-		},
+      const Row = [new MessageActionRow().addComponents(component)];
+      return {
+        ...Menu,
+        row: Row,
+      };
+    },
 
-		embed: {
-			/**
-			 * @param {Object} ops
-			 * @param {TextChannel} [ops.channel]
-			 * @param {Array<MessageEmbed>} [ops.embeds]
-			 * @param {Array} [ops.buttons]
-			 * @param {String} [ops.userID]
-			 * @param {Boolean} [ops.disable]
-			 * @param {Boolean} [ops.onlyURL]
-			 * @param {Number} [ops.timeout]
-			 */
-			button: (ops) => {
-				const {
-					channel, embeds, buttons, userID = null, disable = true, onlyURL = true, timeout = 30000,
-				} = ops;
-				const { check, row } = this.interaction.button(buttons);
-				return channel
-					.send({ embeds: [embeds[0]], components: row.Enabled })
-					.then((message) => {
-						const btn = (interaction) => {
-							const result = check.findIndex(
-								(x) => x.id === interaction.customId
-							);
-							if (!embeds[result])
-								throw new Error(
-									`'Michiaki' => ops.buttons[${result}] please provide embed for you option.`
-								);
-							return interaction.message.edit({ embeds: [embeds[result]] });
-						};
+    embed: {
+      /**
+       * @param {Object} ops
+       * @param {TextChannel} [ops.channel]
+       * @param {Array<MessageEmbed>} [ops.embeds]
+       * @param {Array} [ops.buttons]
+       * @param {String} [ops.userID]
+       * @param {Boolean} [ops.disable]
+       * @param {Boolean} [ops.onlyURL]
+       * @param {Number} [ops.timeout]
+       */
+      button: (ops) => {
+        const {
+          channel,
+          embeds,
+          buttons,
+          userID = null,
+          disable = true,
+          onlyURL = true,
+          timeout = 30000,
+        } = ops;
+        const { check, row } = this.interaction.button(buttons);
+        return channel
+          .send({ embeds: [embeds[0]], components: row.Enabled })
+          .then((message) => {
+            const btn = (interaction) => {
+              const result = check.findIndex(
+                (x) => x.id === interaction.customId
+              );
+              if (!embeds[result])
+                throw new Error(
+                  `'Michiaki' => ops.buttons[${result}] please provide embed for you option.`
+                );
+              return interaction.message.edit({ embeds: [embeds[result]] });
+            };
 
-						const filter = (interaction) => {
-							interaction.deferUpdate();
-							if (!userID)
-								return true;
-							return interaction.user.id === userID;
-						};
-						const collector = message.createMessageComponentCollector({
-							filter,
-							componentType: "BUTTON",
-							time: timeout,
-						});
-						collector.on("collect", btn);
-						collector.on("end", () => message.edit({
-							embeds: [embeds[0]],
-							components: disable ? (onlyURL ? row.URL : row.Disabled) : null,
-						})
-						);
-					});
-			},
-			/**
-			 * @param {Object} ops
-			 * @param {TextChannel} [ops.channel]
-			 * @param {Array<MessageEmbed>} [ops.embeds]
-			 * @param {Object} [ops.menu]
-			 * @param {String} [ops.userID]
-			 * @param {Number} [ops.timeout]
-			 */
-			menu: (ops) => {
-				const { channel, embeds, menu, userID = null, timeout = 30000 } = ops;
-				const { row } = this.interaction.menu(menu);
-				let selected = new Collection();
-				return channel
-					.send({ embeds: [embeds[0]], components: row })
-					.then((message) => {
-						const selection = (interaction) => {
-							if (row[0].components[0].customId !== interaction.customId)
-								return;
-							const index = row[0].components[0].options.findIndex(
-								(x) => x.value === interaction.values[0]
-							);
-							if (!embeds[index])
-								throw new Error(
-									`'Michiaki' => ops.menu.options[${index}] please provide embed for you option.`
-								);
-							if (selected.has(row[0].components[0].customId))
-								row[0].components[0].options[selected.get(row[0].components[0].customId)].default = false;
-							selected.set(row[0].components[0].customId, index);
-							row[0].components[0].options[index].default = true;
-							return interaction.message.edit({
-								embeds: [embeds[index]],
-								components: row,
-							});
-						};
+            const filter = (interaction) => {
+              interaction.deferUpdate();
+              if (!userID) return true;
+              return interaction.user.id === userID;
+            };
+            const collector = message.createMessageComponentCollector({
+              filter,
+              componentType: "BUTTON",
+              time: timeout,
+            });
+            collector.on("collect", btn);
+            collector.on("end", () =>
+              message.edit({
+                embeds: [embeds[0]],
+                components: disable ? (onlyURL ? row.URL : row.Disabled) : null,
+              })
+            );
+          });
+      },
+      /**
+       * @param {Object} ops
+       * @param {TextChannel} [ops.channel]
+       * @param {Array<MessageEmbed>} [ops.embeds]
+       * @param {Object} [ops.menu]
+       * @param {String} [ops.userID]
+       * @param {Number} [ops.timeout]
+       */
+      menu: (ops) => {
+        const { channel, embeds, menu, userID = null, timeout = 30000 } = ops;
+        const { row } = this.interaction.menu(menu);
+        let selected = new Collection();
+        return channel
+          .send({ embeds: [embeds[0]], components: row })
+          .then((message) => {
+            const selection = (interaction) => {
+              if (row[0].components[0].customId !== interaction.customId)
+                return;
+              const index = row[0].components[0].options.findIndex(
+                (x) => x.value === interaction.values[0]
+              );
+              if (!embeds[index])
+                throw new Error(
+                  `'Michiaki' => ops.menu.options[${index}] please provide embed for you option.`
+                );
+              if (selected.has(row[0].components[0].customId))
+                row[0].components[0].options[
+                  selected.get(row[0].components[0].customId)
+                ].default = false;
+              selected.set(row[0].components[0].customId, index);
+              row[0].components[0].options[index].default = true;
+              return interaction.message.edit({
+                embeds: [embeds[index]],
+                components: row,
+              });
+            };
 
-						const filter = (interaction) => {
-							interaction.deferUpdate();
-							if (!userID)
-								return true;
-							return interaction.user.id === userID;
-						};
-						const collector = message.createMessageComponentCollector({
-							filter,
-							componentType: "SELECT_MENU",
-							time: timeout,
-						});
-						collector.on("collect", selection);
-						collector.on("end", () => {
-							if (selected.has(row[0].components[0].customId))
-								row[0].components[0].options[selected.get(row[0].components[0].customId)].default = false;
-							row[0].components[0].options[0].default = true;
-							row[0].components[0].disabled = true;
-							selected.delete(row[0].components[0].customId);
-							return message.edit({ embeds: [embeds[0]], components: row });
-						});
-					});
-			},
-		},
-	};
-	get interaction() {
-		return this._interaction;
-	}
-	set interaction(value) {
-		this._interaction = value;
-	}
+            const filter = (interaction) => {
+              interaction.deferUpdate();
+              if (!userID) return true;
+              return interaction.user.id === userID;
+            };
+            const collector = message.createMessageComponentCollector({
+              filter,
+              componentType: "SELECT_MENU",
+              time: timeout,
+            });
+            collector.on("collect", selection);
+            collector.on("end", () => {
+              if (selected.has(row[0].components[0].customId))
+                row[0].components[0].options[
+                  selected.get(row[0].components[0].customId)
+                ].default = false;
+              row[0].components[0].options[0].default = true;
+              row[0].components[0].disabled = true;
+              selected.delete(row[0].components[0].customId);
+              return message.edit({ embeds: [embeds[0]], components: row });
+            });
+          });
+      },
+    },
+  };
+  get interaction() {
+    return this._interaction;
+  }
+  set interaction(value) {
+    this._interaction = value;
+  }
   prompt = {
     /**
      * @param {Object} ops

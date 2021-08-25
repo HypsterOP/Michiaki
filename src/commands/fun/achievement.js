@@ -18,7 +18,7 @@ module.exports = class AchieveCommand extends Command {
       }
 
       const link = await this.client.alexflipnote.image.achievement({
-        text
+        text,
       });
 
       message.channel.send({ files: [link] });

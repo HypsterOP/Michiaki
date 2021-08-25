@@ -13,7 +13,7 @@ module.exports = class GuildCreateEvent extends Event {
     const update = { guild: guild.id };
     const data = await config.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     });
     if (data) {
       log.success("Mongoose Database", guild.name + " was registered");

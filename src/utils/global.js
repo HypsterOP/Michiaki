@@ -32,7 +32,7 @@ global.send = (
     channelID = "",
     content = "",
     embeds = [],
-    db = "log"
+    db = "log",
   }
 ) => {
   const guild = client.guilds.cache.get(guildID);
@@ -42,7 +42,7 @@ global.send = (
 
   const channel = guild.channels.cache.get(
     channelID ??
-			client.mongoose.database.get(`settings_${guild.id}`)?.channel[db]
+      client.mongoose.database.get(`settings_${guild.id}`)?.channel[db]
   );
   if (!channel) {
     return;
@@ -61,5 +61,5 @@ global.log = {
   debug: (title, content) =>
     console.log(chalk.black(`[${time}] | [DEBUG][${title}]: ${content}`)),
   info: (title, content) =>
-    console.log(`[${time}] | [INFO][${title}]: ${content}`)
+    console.log(`[${time}] | [INFO][${title}]: ${content}`),
 };

@@ -4,6 +4,6 @@ module.exports = mongoose.model(
   "database",
   new mongoose.Schema({
     key: String,
-    value: mongoose.SchemaTypes.Mixed
+    value: mongoose.SchemaTypes.Mixed,
   })
 );

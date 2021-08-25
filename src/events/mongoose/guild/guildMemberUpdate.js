@@ -14,7 +14,7 @@ module.exports = class GuildMemberUpdateEvent extends Event {
     const { nickname } = this.mongoose.models;
     let data = await nickname.findOne({
       guild: member.guild.id,
-      user: member.user.id
+      user: member.user.id,
     });
     log.success(
       "Mongoose Database",
@@ -30,7 +30,7 @@ module.exports = class GuildMemberUpdateEvent extends Event {
       collect.list.push({
         past: collect.past,
         current: collect.current,
-        date: collect.date
+        date: collect.date,
       });
       data = new nickname(collect);
     } else {
@@ -39,7 +39,7 @@ module.exports = class GuildMemberUpdateEvent extends Event {
       data.list.push({
         past: data.past,
         current: data.current,
-        date: data.date
+        date: data.date,
       });
     }
 

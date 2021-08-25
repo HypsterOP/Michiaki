@@ -5,12 +5,8 @@ module.exports = class RespectCommand extends Command {
   constructor(...args) {
     super(...args, {
       id: "Respect",
-      aliases: ['f', 'rp', '+rp'],
-      examples: [
-          'respect',
-          'f',
-          'rp @HypsterOP'
-      ]
+      aliases: ["f", "rp", "+rp"],
+      examples: ["respect", "f", "rp @HypsterOP"],
     });
   }
 
@@ -20,16 +16,14 @@ module.exports = class RespectCommand extends Command {
    */
   async do(message, args) {
     try {
-        const embed = new MessageEmbed()
-          .setColor("NOT_QUITE_BLACK")
-          .setFooter(
-            `Press F to pay respect`
-          )
-          .setDescription(
-            `${message.member} has paid their respect${
-              args.length ? ` to ${args.join(" ")}.` : ""
-            }`
-          );
+      const embed = new MessageEmbed()
+        .setColor("NOT_QUITE_BLACK")
+        .setFooter(`Press F to pay respect`)
+        .setDescription(
+          `${message.member} has paid their respect${
+            args.length ? ` to ${args.join(" ")}.` : ""
+          }`
+        );
       const f = await message.channel.send({ embeds: [embed] });
 
       await message.delete().catch(() => null);

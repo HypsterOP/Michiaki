@@ -4,7 +4,7 @@ const { CommandInteraction } = require("discord.js");
 module.exports = class InteractionCreateEvent extends Event {
   constructor(...args) {
     super(...args, {
-      once: false
+      once: false,
     });
   }
 
@@ -21,7 +21,7 @@ module.exports = class InteractionCreateEvent extends Event {
 
     if (!interaction.guild) {
       return interaction.reply({
-        content: "Slash commands must be in a server"
+        content: "Slash commands must be in a server",
       });
     }
 
@@ -38,7 +38,7 @@ module.exports = class InteractionCreateEvent extends Event {
       return log.error(
         "Getting Slash Command",
         `'${command.name}.js' => ${require("util").inspect(error, {
-          depth: 3
+          depth: 3,
         })}`
       );
     }

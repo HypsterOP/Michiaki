@@ -9,7 +9,9 @@ module.exports = class ReadyEvent extends Event {
 
   do() {
     const { status } = this.client.config.bot;
-    this.client.shard ? this.shardStatus({ status }) : this.noshardStatus({ status });
+    this.client.shard
+      ? this.shardStatus({ status })
+      : this.noshardStatus({ status });
     let i = 0;
     setInterval(() => {
       if (i > status.length - 1) {
@@ -17,7 +19,9 @@ module.exports = class ReadyEvent extends Event {
       }
 
       this.status = i;
-      this.client.shard ? this.shardStatus({ status }) : this.noshardStatus({ status });
+      this.client.shard
+        ? this.shardStatus({ status })
+        : this.noshardStatus({ status });
       i++;
     }, 15 * 1000);
   }
@@ -41,10 +45,10 @@ module.exports = class ReadyEvent extends Event {
               )
             )
             .replace(/\{channels\}/gi, this.client.channels.cache.size),
-          type: status[this.status].type
-        }
+          type: status[this.status].type,
+        },
       ],
-      status: "idle"
+      status: "idle",
     });
   }
 
@@ -57,7 +61,8 @@ module.exports = class ReadyEvent extends Event {
       const promises = [
         this.client.shard.fetchClientValues("guilds.cache.size"),
         this.client.shard.broadcastEval((c) =>
-          c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0))
+          c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
+        ),
       ];
       return Promise.all(promises)
         .then(([guilds, members]) => {
@@ -83,10 +88,10 @@ module.exports = class ReadyEvent extends Event {
                       this.client.channels.cache.size
                     )}`,
                   type: status[this.status].type,
-                  shardID: shard
-                }
+                  shardID: shard,
+                },
               ],
-              status: "idle"
+              status: "idle",
             });
           }
         })

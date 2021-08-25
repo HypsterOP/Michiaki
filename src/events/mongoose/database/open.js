@@ -6,7 +6,7 @@ module.exports = class MongoDBDisconnectedEvent extends Event {
   constructor(...args) {
     super(...args, {
       once: true,
-      emitter: connection
+      emitter: connection,
     });
   }
 
