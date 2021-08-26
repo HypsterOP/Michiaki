@@ -15,8 +15,6 @@ const init = (client) => {
     mongoose
       .connect(process.env.MONGO_URL, {
         useNewUrlParser: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
         useUnifiedTopology: true,
       })
       .then((x) =>
