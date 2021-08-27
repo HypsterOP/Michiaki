@@ -18,7 +18,7 @@ module.exports = class PremiumCommand extends Command {
    */
   async do(message, args) {
    const key = args[0];
-    if (!key) return message.channel.send(createEmbed("fail", "No key given"));
+    if (!key) return message.channel.send({content: "No key given"});
     if (key === "create") {
       if (message.author.id !== "800331322089537538")
         return message.channel.send({ content: "You cannot create keys" })
