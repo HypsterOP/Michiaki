@@ -3,5 +3,6 @@ module.exports = {
   database: require("./database"),
   nickname: require("./nickname"),
   premium: require("./premium"),
-  premiumKey: require("./premiumKey")
+  premiumKey: require("./premiumKey"),
+  logger: require("./logger"),
 };

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 require("dotenv/config");
 require("../utils/global");
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require("discord.js");
 const {
   loadEvent,
   loadCommand,
@@ -91,8 +91,8 @@ module.exports = class client extends Client {
       }\` | autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
     this.distube
-      .on("playSong", (queue, song) => queue.textChannel
-        .send({
+      .on("playSong", (queue, song) =>
+        queue.textChannel.send({
           embeds: [
             new MessageEmbed()
               .setTitle("Playing :notes: " + song.name)
@@ -109,8 +109,8 @@ module.exports = class client extends Client {
         })
       )
 
-      .on("addSong", (queue, song) => queue.textChannel
-        .send({
+      .on("addSong", (queue, song) =>
+        queue.textChannel.send({
           embeds: [
             new MessageEmbed()
               .setTitle("Added :thumbsup: ")
@@ -130,8 +130,8 @@ module.exports = class client extends Client {
         })
       )
 
-      .on("addList", (queue, playlist) => queue.textChannel
-        .send({
+      .on("addList", (queue, playlist) =>
+        queue.textChannel.send({
           embeds: [
             new MessageEmbed()
               .setTitle(
@@ -171,16 +171,14 @@ module.exports = class client extends Client {
                   .join(
                     "\n"
                   )}\n\n*Enter anything else or wait 60 seconds to cancel*`
-              )
+              ),
           ],
         })
       )
       .on("searchCancel", (message) =>
         message.channel.send({
           embeds: [
-            new MessageEmbed()
-              .setColor("RANDOM")
-              .setTitle(`Search Cancelled`),
+            new MessageEmbed().setColor("RANDOM").setTitle(`Search Cancelled`),
           ],
         })
       )
@@ -244,17 +242,39 @@ module.exports = class client extends Client {
   }
 };
 
-
 // functions //
 
 async function format(millis) {
-    try{
-      var h = Math.floor(millis / 3600000),
-        m = Math.floor(millis / 60000),
-        s = ((millis % 60000) / 1000).toFixed(0);
-      if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-      else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-    }catch (e){
-      console.log(String(e.stack))
-    }
+  try {
+    var h = Math.floor(millis / 3600000),
+      m = Math.floor(millis / 60000),
+      s = ((millis % 60000) / 1000).toFixed(0);
+    if (h < 1)
+      return (
+        (m < 10 ? "0" : "") +
+        m +
+        ":" +
+        (s < 10 ? "0" : "") +
+        s +
+        " | " +
+        Math.floor(millis / 1000) +
+        " Seconds"
+      );
+    else
+      return (
+        (h < 10 ? "0" : "") +
+        h +
+        ":" +
+        (m < 10 ? "0" : "") +
+        m +
+        ":" +
+        (s < 10 ? "0" : "") +
+        s +
+        " | " +
+        Math.floor(millis / 1000) +
+        " Seconds"
+      );
+  } catch (e) {
+    console.log(String(e.stack));
   }
+}
