@@ -46,9 +46,9 @@ module.exports = class client extends Client {
 
     this.config = require("../config");
 
-    const { Client } = require('pg');
+    const { Client, Pool } = require('pg');
 
-    const database = new Client({
+    const database = new Pool({
       user: "postgres",
       password: process.env.PASSWORD,
       port: 5432,
@@ -56,8 +56,14 @@ module.exports = class client extends Client {
       database: "michiaki"
     });
 
-    database.connect().then(() => {
-      log.success(`DATABASE`, `Connected to postgres`)
+    database.on("error", (err) => {
+      log.error("Postgres error", err)
+    });
+
+    database.connect()
+
+    database.on("connect", () => {
+      log.success("Database", "Connected to postgres")
     })
 
     this.distube = new DisTube.DisTube(this, {
