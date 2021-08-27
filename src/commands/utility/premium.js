@@ -47,7 +47,7 @@ module.exports = class PremiumCommand extends Command {
           message.channel.send(
             {content: "This server is now premium. Enjoy!"}
           );
-          client.channels.cache.get("878567993901191179").send({ content: `${message.guild.name} got premium.` })
+          this.client.channels.cache.get("878567993901191179").send({ content: `${message.guild.name} got premium.` })
           (await message.guild.fetchOwner()).send({ content: `Your server ${message.guild.name} is now premium.` })
         } else
           return message.channel.send({content:
