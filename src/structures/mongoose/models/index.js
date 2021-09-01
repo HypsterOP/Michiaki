@@ -4,5 +4,4 @@ module.exports = {
   nickname: require("./nickname"),
   premium: require("./premium"),
   premiumKey: require("./premiumKey"),
-  logger: require("./logger"),
 };

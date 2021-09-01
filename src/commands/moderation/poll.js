@@ -25,7 +25,7 @@ module.exports = class PollCommand extends Command {
         return;
       }
 
-      const q = args.join("");
+      const q = args.join(" ");
 
       if (!q) {
         return message.channel.send({ content: "Please specify a question!" });

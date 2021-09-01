@@ -11,6 +11,7 @@ const {
 const DisTube = require("distube");
 const { Client, Collection } = require("discord.js");
 const { performance } = require("perf_hooks");
+const mongoose = require("mongoose");
 
 module.exports = class client extends Client {
   /**
@@ -45,6 +46,108 @@ module.exports = class client extends Client {
     this.alexflipnote = new alexclient(process.env.ALEXFLIPNOTE);
 
     this.config = require("../config");
+
+    const userDataSchema = new mongoose.Schema({
+      userId: String,
+      guildId: String,
+      data: {
+        voiceTime: {
+          channels: Array,
+          total: Number,
+        },
+        levelingData: {
+          xp: Number,
+          level: Number,
+        },
+      },
+    });
+
+    const userDataModel = mongoose.model("voiceUsers", userDataSchema);
+
+    const configDataSchema = new mongoose.Schema({
+      guildId: String,
+      data: {
+        trackBots: Boolean,
+        trackAllChannels: Boolean,
+        exemptChannels: String,
+        channelIds: Array,
+        exemptPermissions: [],
+        exemptMembers: String,
+        trackMute: Boolean,
+        trackDeaf: Boolean,
+        minUserCountToParticipate: Number,
+        maxUserCountToParticipate: Number,
+        minXpToParticipate: Number,
+        minLevelToParticipate: Number,
+        maxXpToParticipate: Number,
+        maxLevelToParticipate: Number,
+        xpAmountToAdd: String,
+        voiceTimeToAdd: String,
+        voiceTimeTrackingEnabled: Boolean,
+        levelingTrackingEnabled: Boolean,
+        levelMultiplier: String,
+      },
+    });
+
+    const configDataModel = mongoose.model("voiceConfigs", configDataSchema);
+
+    const { VoiceManager } = require("discord-voice");
+
+    const VoiceManagerWithDB = class extends VoiceManager {
+      async getAllUsers() {
+        return await userDataModel.find({});
+      }
+
+      async getAllConfigs() {
+        return await configDataModel.find({});
+      }
+
+      async saveUser(userId, guildId, userData) {
+        await userDataModel.create(userData);
+        return true;
+      }
+
+      async saveConfig(guildId, configData) {
+        await configDataModel.create(configData);
+        return true;
+      }
+
+      async editUser(userId, guildId, userData) {
+        await userDataModel
+          .findOneAndUpdate({ userId: userId, guildId: guildId }, userData)
+          .exec();
+        return true;
+      }
+
+      async editConfig(guildId, configData) {
+        await configDataModel
+          .findOneAndUpdate({ guildId: guildId }, configData)
+          .exec();
+        return true;
+      }
+
+      async deleteUser(userId, guildId) {
+        await userDataModel
+          .findOneAndDelete({ userId: userId, guildId: guildId })
+          .exec();
+        return true;
+      }
+
+      async deleteConfig(guildId) {
+        await configDataModel.findOneAndDelete({ guildId: guildId }).exec();
+        return true;
+      }
+    };
+
+    const manager = new VoiceManagerWithDB(this, {
+      checkMembersEvery: 5000,
+      default: {
+        trackBots: false,
+        trackAllChannels: true,
+      },
+    });
+
+    this.voiceManager = manager;
 
     this.distube = new DisTube.DisTube(this, {
       searchSongs: 4,

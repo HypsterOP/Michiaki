@@ -47,6 +47,7 @@
 		"common-tags": "^1.8.0",
 		"cowsay": "^1.5.0",
 		"cpu-stat": "^2.0.1",
+		"discord-voice": "^2.0.3",
 		"discord.js": "^13.1.0",
 		"distube": "^3.0.0-beta.36",
 		"ffmpeg-static": "^4.4.0",
