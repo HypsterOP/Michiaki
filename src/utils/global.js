@@ -3,7 +3,7 @@ require("./prototype");
 const chalk = require("chalk");
 const moment = require("moment");
 require("moment-timezone");
-const time = moment().tz("Asia/India").format("MMMM Do YYYY, h:mm:ss A");
+const time = moment().tz("Asia/Kolkata").format("MMMM Do YYYY, h:mm:ss A")
 global.Embed = require("../structures/embed");
 global.michiaki = new Michiaki(
   { oauth: process.env.MICHIAKI_USER_OAUTH },
@@ -63,3 +63,4 @@ global.log = {
   info: (title, content) =>
     console.log(`[${time}] | [INFO][${title}]: ${content}`),
 };
+

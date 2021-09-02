@@ -3,10 +3,10 @@ require("dotenv/config");
 require("../utils/global");
 const { MessageEmbed } = require("discord.js");
 const {
-  loadEvent,
-  loadCommand,
-  loadSlash,
-  loadMonitor,
+    loadEvent,
+    loadCommand,
+    loadSlash,
+    loadMonitor,
 } = require("../utils/handlers");
 const DisTube = require("distube");
 const { Client, Collection } = require("discord.js");
@@ -14,176 +14,74 @@ const { performance } = require("perf_hooks");
 const mongoose = require("mongoose");
 
 module.exports = class client extends Client {
-  /**
-   * Creates an instance of client.
-   * @param { import ("discord.js").ClientOptions } props
-   * @memberof client
-   */
-  constructor(props) {
-    // Pass in any client configuration you want for the bot.
-    // more client options can be found at
-    // https://discord.js.org/#/docs/main/master/typedef/ClientOptions
-    if (!props) {
-      props = {};
-    }
+        /**
+         * Creates an instance of client.
+         * @param { import ("discord.js").ClientOptions } props
+         * @memberof client
+         */
+        constructor(props) {
+                // Pass in any client configuration you want for the bot.
+                // more client options can be found at
+                // https://discord.js.org/#/docs/main/master/typedef/ClientOptions
+                if (!props) {
+                    props = {};
+                }
 
-    props.intents = 32767; // Intents.ALL
-    props.partials = ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"];
-    props.allowedMentions = { parse: ["users"] };
-    props.restTimeOffset = 0;
-    props.restWsBridgeTimeout = 100;
-    super(props);
+                props.intents = 32767; // Intents.ALL
+                props.partials = ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"];
+                props.allowedMentions = { parse: ["users"] };
+                props.restTimeOffset = 0;
+                props.restWsBridgeTimeout = 100;
+                super(props);
 
-    require("events").EventEmitter.defaultMaxListeners = 100;
-    process.setMaxListeners(100);
+                require("events").EventEmitter.defaultMaxListeners = 100;
+                process.setMaxListeners(100);
 
-    const memer = require("memer-api");
+                const memer = require("memer-api");
 
-    const alexclient = require("alexflipnote.js");
+                const alexclient = require("alexflipnote.js");
 
-    this.memer = new memer(process.env.MEME);
+                this.memer = new memer(process.env.MEME);
 
-    this.alexflipnote = new alexclient(process.env.ALEXFLIPNOTE);
+                this.alexflipnote = new alexclient(process.env.ALEXFLIPNOTE);
 
-    this.config = require("../config");
+                this.config = require("../config");
 
-    const userDataSchema = new mongoose.Schema({
-      userId: String,
-      guildId: String,
-      data: {
-        voiceTime: {
-          channels: Array,
-          total: Number,
-        },
-        levelingData: {
-          xp: Number,
-          level: Number,
-        },
-      },
-    });
+                this.distube = new DisTube.DisTube(this, {
+                    searchSongs: 4,
+                    emitNewSongOnly: false,
+                    leaveOnEmpty: true,
+                    leaveOnFinish: true,
+                    leaveOnStop: true,
+                    youtubeCookie: process.env.COOKIE,
+                    youtubeDL: true,
+                    customFilters: {
+                        clear: "dynaudnorm=f=200",
+                        lowbass: "bass=g=6,dynaudnorm=f=200",
+                        bassboost: "bass=g=20,dynaudnorm=f=200",
+                        purebass: "bass=g=20,dynaudnorm=f=200,asubboost,apulsator=hz=0.08",
+                        "8D": "apulsator=hz=0.08",
+                        vaporwave: "aresample=48000,asetrate=48000*0.8",
+                        nightcore: "aresample=48000,asetrate=48000*1.25",
+                        phaser: "aphaser=in_gain=0.4",
+                        tremolo: "tremolo",
+                        vibrato: "vibrato=f=6.5",
+                        reverse: "areverse",
+                        treble: "treble=g=5",
+                        normalizer: "dynaudnorm=f=200",
+                        surrounding: "surround",
+                        pulsator: "apulsator=hz=1",
+                        subboost: "asubboost",
+                        karaoke: "stereotools=mlev=0.03",
+                        flanger: "flanger",
+                        gate: "agate",
+                        haas: "haas",
+                        mcompand: "mcompand",
+                    },
+                });
 
-    const userDataModel = mongoose.model("voiceUsers", userDataSchema);
-
-    const configDataSchema = new mongoose.Schema({
-      guildId: String,
-      data: {
-        trackBots: Boolean,
-        trackAllChannels: Boolean,
-        exemptChannels: String,
-        channelIds: Array,
-        exemptPermissions: [],
-        exemptMembers: String,
-        trackMute: Boolean,
-        trackDeaf: Boolean,
-        minUserCountToParticipate: Number,
-        maxUserCountToParticipate: Number,
-        minXpToParticipate: Number,
-        minLevelToParticipate: Number,
-        maxXpToParticipate: Number,
-        maxLevelToParticipate: Number,
-        xpAmountToAdd: String,
-        voiceTimeToAdd: String,
-        voiceTimeTrackingEnabled: Boolean,
-        levelingTrackingEnabled: Boolean,
-        levelMultiplier: String,
-      },
-    });
-
-    const configDataModel = mongoose.model("voiceConfigs", configDataSchema);
-
-    const { VoiceManager } = require("discord-voice");
-
-    const VoiceManagerWithDB = class extends VoiceManager {
-      async getAllUsers() {
-        return await userDataModel.find({});
-      }
-
-      async getAllConfigs() {
-        return await configDataModel.find({});
-      }
-
-      async saveUser(userId, guildId, userData) {
-        await userDataModel.create(userData);
-        return true;
-      }
-
-      async saveConfig(guildId, configData) {
-        await configDataModel.create(configData);
-        return true;
-      }
-
-      async editUser(userId, guildId, userData) {
-        await userDataModel
-          .findOneAndUpdate({ userId: userId, guildId: guildId }, userData)
-          .exec();
-        return true;
-      }
-
-      async editConfig(guildId, configData) {
-        await configDataModel
-          .findOneAndUpdate({ guildId: guildId }, configData)
-          .exec();
-        return true;
-      }
-
-      async deleteUser(userId, guildId) {
-        await userDataModel
-          .findOneAndDelete({ userId: userId, guildId: guildId })
-          .exec();
-        return true;
-      }
-
-      async deleteConfig(guildId) {
-        await configDataModel.findOneAndDelete({ guildId: guildId }).exec();
-        return true;
-      }
-    };
-
-    const manager = new VoiceManagerWithDB(this, {
-      checkMembersEvery: 5000,
-      default: {
-        trackBots: false,
-        trackAllChannels: true,
-      },
-    });
-
-    this.voiceManager = manager;
-
-    this.distube = new DisTube.DisTube(this, {
-      searchSongs: 4,
-      emitNewSongOnly: false,
-      leaveOnEmpty: true,
-      leaveOnFinish: true,
-      leaveOnStop: true,
-      youtubeCookie: process.env.COOKIE,
-      youtubeDL: true,
-      customFilters: {
-        clear: "dynaudnorm=f=200",
-        lowbass: "bass=g=6,dynaudnorm=f=200",
-        bassboost: "bass=g=20,dynaudnorm=f=200",
-        purebass: "bass=g=20,dynaudnorm=f=200,asubboost,apulsator=hz=0.08",
-        "8D": "apulsator=hz=0.08",
-        vaporwave: "aresample=48000,asetrate=48000*0.8",
-        nightcore: "aresample=48000,asetrate=48000*1.25",
-        phaser: "aphaser=in_gain=0.4",
-        tremolo: "tremolo",
-        vibrato: "vibrato=f=6.5",
-        reverse: "areverse",
-        treble: "treble=g=5",
-        normalizer: "dynaudnorm=f=200",
-        surrounding: "surround",
-        pulsator: "apulsator=hz=1",
-        subboost: "asubboost",
-        karaoke: "stereotools=mlev=0.03",
-        flanger: "flanger",
-        gate: "agate",
-        haas: "haas",
-        mcompand: "mcompand",
-      },
-    });
-
-    const status = (queue) =>
-      `volume: \`${queue.volume}%\` | filter: \`${
+                const status = (queue) =>
+                    `volume: \`${queue.volume}%\` | filter: \`${
         queue.filter || "Off"
       }\` | loop: \`${
         queue.repeatMode
@@ -193,80 +91,80 @@ module.exports = class client extends Client {
           : "Off"
       }\` | autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
 
-    this.distube
-      .on("playSong", (queue, song) =>
-        queue.textChannel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle("Playing :notes: " + song.name)
-              .setURL(song.url)
-              .setColor("RANDOM")
-              .addField("duration", `\`${song.formattedDuration}\``)
-              .addField("queue status", status(queue))
-              .setThumbnail(song.thumbnail)
-              .setFooter(
-                `Requested by: ${song.user.tag}`,
-                song.user.displayAvatarURL({ dynamic: true })
-              ),
-          ],
-        })
-      )
+                this.distube
+                    .on("playSong", (queue, song) =>
+                        queue.textChannel.send({
+                            embeds: [
+                                new MessageEmbed()
+                                .setTitle("Playing :notes: " + song.name)
+                                .setURL(song.url)
+                                .setColor("RANDOM")
+                                .addField("duration", `\`${song.formattedDuration}\``)
+                                .addField("queue status", status(queue))
+                                .setThumbnail(song.thumbnail)
+                                .setFooter(
+                                    `Requested by: ${song.user.tag}`,
+                                    song.user.displayAvatarURL({ dynamic: true })
+                                ),
+                            ],
+                        })
+                    )
 
-      .on("addSong", (queue, song) =>
-        queue.textChannel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle("Added :thumbsup: ")
-              .setURL(song.url)
-              .setColor("RANDOM")
-              .addField(
-                `${queue.songs.length} Songs in the Queue`,
-                `Duration: \`${format(queue.duration * 1000)}\``
-              )
-              .addField("Duration", `\`${song.formattedDuration}\``)
-              .setThumbnail(song.thumbnail)
-              .setFooter(
-                `Requested by: ${song.user.tag}`,
-                song.user.displayAvatarURL({ dynamic: true })
-              ),
-          ],
-        })
-      )
+                .on("addSong", (queue, song) =>
+                    queue.textChannel.send({
+                        embeds: [
+                            new MessageEmbed()
+                            .setTitle("Added :thumbsup: ")
+                            .setURL(song.url)
+                            .setColor("RANDOM")
+                            .addField(
+                                `${queue.songs.length} Songs in the Queue`,
+                                `Duration: \`${format(queue.duration * 1000)}\``
+                            )
+                            .addField("Duration", `\`${song.formattedDuration}\``)
+                            .setThumbnail(song.thumbnail)
+                            .setFooter(
+                                `Requested by: ${song.user.tag}`,
+                                song.user.displayAvatarURL({ dynamic: true })
+                            ),
+                        ],
+                    })
+                )
 
-      .on("addList", (queue, playlist) =>
-        queue.textChannel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(
-                "Added Playlist :thumbsup: " +
-                  playlist.name +
-                  ` - \`[${playlist.songs.length} songs]\``
-              )
-              .setURL(playlist.url)
-              .setColor("RANDOM")
-              .addField("Duration", `\`${playlist.formattedDuration}\``)
-              .addField(
-                `${queue.songs.length} Songs in the Queue`,
-                `Duration: \`${format(queue.duration * 1000)}\``
-              )
-              .setThumbnail(playlist.thumbnail.url)
-              .setFooter(
-                `Requested by: ${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              ),
-          ],
-        })
-      )
+                .on("addList", (queue, playlist) =>
+                    queue.textChannel.send({
+                        embeds: [
+                            new MessageEmbed()
+                            .setTitle(
+                                "Added Playlist :thumbsup: " +
+                                playlist.name +
+                                ` - \`[${playlist.songs.length} songs]\``
+                            )
+                            .setURL(playlist.url)
+                            .setColor("RANDOM")
+                            .addField("Duration", `\`${playlist.formattedDuration}\``)
+                            .addField(
+                                `${queue.songs.length} Songs in the Queue`,
+                                `Duration: \`${format(queue.duration * 1000)}\``
+                            )
+                            .setThumbnail(playlist.thumbnail.url)
+                            .setFooter(
+                                `Requested by: ${message.author.tag}`,
+                                message.author.displayAvatarURL({ dynamic: true })
+                            ),
+                        ],
+                    })
+                )
 
-      .on("searchResult", (message, result) =>
-        message.channel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle("**Choose an option from below**")
-              .setURL(song.url)
-              .setColor("RANDOM")
-              .setDescription(
-                `${result
+                .on("searchResult", (message, result) =>
+                        message.channel.send({
+                                embeds: [
+                                        new MessageEmbed()
+                                        .setTitle("**Choose an option from below**")
+                                        .setURL(song.url)
+                                        .setColor("RANDOM")
+                                        .setDescription(
+                                            `${result
                   .map(
                     (song, i) =>
                       `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
