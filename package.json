@@ -57,7 +57,7 @@
 		"i18next-fs-backend": "^1.1.1",
 		"lodash": "^4.17.21",
 		"lumina-wrapper.js": "^1.0.5",
-		"memer-api": "^3.0.6",
+		"memer-api": "^4.0.0",
 		"moment": "^2.29.1",
 		"moment-duration-format": "^2.3.2",
 		"moment-timezone": "^0.5.33",
