@@ -53,7 +53,7 @@
 		"ffmpeg-static": "^4.4.0",
 		"file-url": "^4.0.0",
 		"https": "^1.0.0",
-		"i18next": "^20.6.0",
+		"i18next": "^21.4.0",
 		"i18next-fs-backend": "^1.1.1",
 		"lodash": "^4.17.21",
 		"lumina-wrapper.js": "^1.0.5",
